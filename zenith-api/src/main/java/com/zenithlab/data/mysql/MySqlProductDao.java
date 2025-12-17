@@ -19,19 +19,20 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
     }
 
     @Override
-    public List<Product> search(Integer categoryId, BigDecimal minPrice, BigDecimal maxPrice, String subCategory)
+    public List<Product> search(Integer categoryId, BigDecimal minPrice, BigDecimal maxPrice, String color)
     {
         List<Product> products = new ArrayList<>();
 
         String sql = "SELECT * FROM products " +
                 "WHERE (category_id = ? OR ? = -1) " +
+                "   AND (price >= ? OR ? = -1) " +
                 "   AND (price <= ? OR ? = -1) " +
-                "   AND (subcategory = ? OR ? = '') ";
+                "   AND (color = ? OR ? = '') ";
 
         categoryId = categoryId == null ? -1 : categoryId;
         minPrice = minPrice == null ? new BigDecimal("-1") : minPrice;
         maxPrice = maxPrice == null ? new BigDecimal("-1") : maxPrice;
-        subCategory = subCategory == null ? "" : subCategory;
+        color = color == null ? "" : color;
 
         try (Connection connection = getConnection())
         {
@@ -40,8 +41,10 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
             statement.setInt(2, categoryId);
             statement.setBigDecimal(3, minPrice);
             statement.setBigDecimal(4, minPrice);
-            statement.setString(5, subCategory);
-            statement.setString(6, subCategory);
+            statement.setBigDecimal(5, maxPrice);
+            statement.setBigDecimal(6, maxPrice);
+            statement.setString(7, color);
+            statement.setString(8, color);
 
             ResultSet row = statement.executeQuery();
 
@@ -116,7 +119,7 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
     public Product create(Product product)
     {
 
-        String sql = "INSERT INTO products(name, price, category_id, description, subcategory, image_url, stock, featured) " +
+        String sql = "INSERT INTO products(name, price, category_id, description, color, image_url, stock, featured) " +
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
         try (Connection connection = getConnection())
@@ -126,7 +129,7 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
             statement.setBigDecimal(2, product.getPrice());
             statement.setInt(3, product.getCategoryId());
             statement.setString(4, product.getDescription());
-            statement.setString(5, product.getSubCategory());
+            statement.setString(5, product.getColor());
             statement.setString(6, product.getImageUrl());
             statement.setInt(7, product.getStock());
             statement.setBoolean(8, product.isFeatured());
@@ -161,7 +164,7 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
                 "   , price = ? " +
                 "   , category_id = ? " +
                 "   , description = ? " +
-                "   , subcategory = ? " +
+                "   , color = ? " +
                 "   , image_url = ? " +
                 "   , stock = ? " +
                 "   , featured = ? " +
@@ -174,7 +177,7 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
             statement.setBigDecimal(2, product.getPrice());
             statement.setInt(3, product.getCategoryId());
             statement.setString(4, product.getDescription());
-            statement.setString(5, product.getSubCategory());
+            statement.setString(5, product.getColor());
             statement.setString(6, product.getImageUrl());
             statement.setInt(7, product.getStock());
             statement.setBoolean(8, product.isFeatured());
@@ -215,11 +218,11 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
         BigDecimal price = row.getBigDecimal("price");
         int categoryId = row.getInt("category_id");
         String description = row.getString("description");
-        String subCategory = row.getString("subcategory");
+        String color = row.getString("color");
         int stock = row.getInt("stock");
         boolean isFeatured = row.getBoolean("featured");
         String imageUrl = row.getString("image_url");
 
-        return new Product(productId, name, price, categoryId, description, subCategory, stock, isFeatured, imageUrl);
+        return new Product(productId, name, price, categoryId, description, color, stock, isFeatured, imageUrl);
     }
 }

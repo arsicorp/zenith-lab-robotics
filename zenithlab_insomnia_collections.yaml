@@ -488,15 +488,15 @@ collection:
         method: GET
         parameters:
           - name: cat
-            value: "3"
+            value: "7"
             disabled: false
             id: pair_185f1b07a0bd426d92ae376b24f8508b
           - name: minPrice
-            value: "80"
+            value: "2000"
             disabled: false
             id: pair_1ca44c6c8a9b4d42939ffb2da971de21
           - name: maxPrice
-            value: "90"
+            value: "6000"
             disabled: false
             id: pair_381264dcd8324ab09bdfaffadeed0aa6
         scripts:
@@ -505,7 +505,7 @@ collection:
             var data = insomnia.response.json();
 
             insomnia.test('Number of products = ' + data.length, function () {
-                insomnia.expect(data.length).to.equal(1);
+                insomnia.expect(data.length).to.equal(5);
             });
         settings:
           renderRequestBody: true

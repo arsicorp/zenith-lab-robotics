@@ -197,39 +197,39 @@ INSERT INTO categories (name, description) VALUES
 -- flagship robots
 INSERT INTO products (name, price, category_id, description, color, stock, featured, image_url, ai_model, height_cm, weight_kg, payload_kg, battery_hours, speed_kmh, autonomy_level, buyer_requirement, warranty_years, use_cases) VALUES
 
-('KODA Household Robot', 34999.00, 1, 
+('KODA Household Robot', 34999.00, 1,
 'The ultimate home assistant. KODA seamlessly handles cleaning, cooking, laundry, elderly care, and garden maintenance. Powered by advanced AI, KODA learns your preferences and adapts to your household needs. With its gentle touch and intelligent navigation, KODA becomes an indispensable member of your family.',
-'Pearl White', 25, TRUE, 'koda-household.jpg',
+'Ceramic Sand', 25, TRUE, 'koda-household.jpg',
 'Zenith Neural OS v3.2', 165, 58.5, 15.0, 16.0, 4.5, 'Fully Autonomous',
 'NONE', 3, 'cleaning,cooking,laundry,elderly care,garden maintenance,home security'),
 
 ('SERVO Industrial Robot', 189999.00, 2,
 'Complete industrial automation solution. SERVO excels at assembly line work, warehouse logistics, quality control, and heavy material handling. Built for 24/7 operation in demanding environments, SERVO increases productivity while maintaining precision. Industry 4.0 ready with full IoT integration.',
-'Titanium Gray', 15, TRUE, 'servo-industrial.jpg',
+'Raw Titanium', 15, TRUE, 'servo-industrial.jpg',
 'Zenith Industrial AI v2.8', 180, 125.0, 250.0, 12.0, 6.0, 'Semi-Autonomous',
 'BUSINESS', 5, 'assembly,logistics,quality control,material handling,warehouse automation,manufacturing'),
 
 ('NOVA Medical Robot', 349999.00, 3,
 'Advanced healthcare automation. NOVA assists with surgical procedures, patient mobility, laboratory automation, and clinical care. FDA compliant with medical grade precision sensors. NOVA reduces staff workload while improving patient outcomes. Seamlessly integrates with hospital systems.',
-'Clinical White', 8, TRUE, 'nova-medical.jpg',
+'Stellar White', 8, TRUE, 'nova-medical.jpg',
 'Zenith MedAI v4.1 (FDA Certified)', 170, 72.0, 35.0, 10.0, 3.5, 'Semi-Autonomous',
 'MEDICAL', 5, 'surgical assistance,patient care,mobility assistance,laboratory automation,sterilization,medical transport'),
 
 ('MAGMA Construction Robot', 289999.00, 4,
 'Total construction powerhouse. MAGMA handles heavy material handling, precision installation, demolition work, and site preparation. Weatherproof and rugged, built for extreme conditions. With 500kg payload capacity, MAGMA replaces multiple workers while ensuring safety and efficiency.',
-'Industrial Orange', 10, TRUE, 'magma-construction.jpg',
+'Molten Orange', 10, TRUE, 'magma-construction.jpg',
 'Zenith Construction AI v2.5', 210, 185.0, 500.0, 8.0, 5.5, 'Semi-Autonomous',
 'BUSINESS', 3, 'material handling,demolition,installation,site preparation,heavy lifting,excavation support'),
 
 ('EPSI-9 Tactical Unit', 799999.00, 5,
 'Elite tactical operations robot. EPSI-9 provides surveillance, reconnaissance, perimeter security, and tactical support. Military grade durability with encrypted communication systems. ITAR compliant. Requires government authorization for purchase. Trusted by defense forces worldwide.',
-'Combat Black', 5, FALSE, 'epsi9-tactical.jpg',
+'Phantom Black', 5, FALSE, 'epsi9-tactical.jpg',
 'Zenith Tactical AI v5.0 (Classified)', 185, 145.0, 150.0, 18.0, 15.0, 'Semi-Autonomous',
 'GOVERNMENT', 5, 'surveillance,reconnaissance,perimeter security,tactical support,bomb disposal,search and rescue'),
 
 ('SAGE Research Platform', 99999.00, 6,
 'Versatile research and development platform. SAGE is designed for laboratory work, field research, agricultural automation, and scientific studies. Modular design allows extensive customization. Open API for academic and commercial research. Perfect for universities and R&D departments.',
-'Research Silver', 20, TRUE, 'sage-research.jpg',
+'Boreal Green', 20, TRUE, 'sage-research.jpg',
 'Zenith Research AI v3.0 (Open API)', 175, 68.0, 40.0, 14.0, 6.0, 'Fully Autonomous',
 'BUSINESS', 2, 'laboratory research,field studies,agricultural automation,data collection,environmental monitoring,education');
 
@@ -274,7 +274,7 @@ INSERT INTO products (name, price, category_id, description, color, stock, featu
 
 ('EPSI-9 Tactical Equipment Module', 15999.00, 7,
 'Military grade equipment package including encrypted communications, night vision, surveillance sensors, and tactical accessories. ITAR restricted.',
-'Tactical Black', 8, FALSE, 'epsi9-tactical-kit.jpg', 'GOVERNMENT', 3, 'EPSI-9'),
+'Phantom Black', 8, FALSE, 'epsi9-tactical-kit.jpg', 'GOVERNMENT', 3, 'EPSI-9'),
 
 ('Neural Processing Upgrade Core', 11999.00, 7,
 '10x AI processing power upgrade. Enables advanced machine learning, faster decision making, and improved autonomous operations. Easy installation.',

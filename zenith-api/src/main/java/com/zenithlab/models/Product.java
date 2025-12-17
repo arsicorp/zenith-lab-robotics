@@ -9,7 +9,7 @@ public class Product
     private BigDecimal price;
     private int categoryId;
     private String description;
-    private String subCategory;
+    private String color;
     private int stock;
     private boolean isFeatured;
     private String imageUrl;
@@ -18,14 +18,14 @@ public class Product
     {
     }
 
-    public Product(int productId, String name, BigDecimal price, int categoryId, String description, String subCategory, int stock, boolean isFeatured, String imageUrl)
+    public Product(int productId, String name, BigDecimal price, int categoryId, String description, String color, int stock, boolean isFeatured, String imageUrl)
     {
         this.productId = productId;
         this.name = name;
         this.price = price;
         this.categoryId = categoryId;
         this.description = description;
-        this.subCategory = subCategory;
+        this.color = color;
         this.stock = stock;
         this.isFeatured = isFeatured;
         this.imageUrl = imageUrl;
@@ -81,14 +81,14 @@ public class Product
         this.description = description;
     }
 
-    public String getSubCategory()
+    public String getColor()
     {
-        return subCategory;
+        return color;
     }
 
-    public void setSubCategory(String subCategory)
+    public void setColor(String color)
     {
-        this.subCategory = subCategory;
+        this.color = color;
     }
 
     public int getStock()
