@@ -23,7 +23,7 @@ import com.zenithlab.models.User;
 import com.zenithlab.security.jwt.JWTFilter;
 import com.zenithlab.security.jwt.TokenProvider;
 
-@RestControllers
+@RestController
 @CrossOrigin
 @PreAuthorize("permitAll()")
 public class AuthenticationController {
