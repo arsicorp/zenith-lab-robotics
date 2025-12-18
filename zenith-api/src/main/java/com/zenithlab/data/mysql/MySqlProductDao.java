@@ -13,7 +13,7 @@ import java.util.List;
 @Component
 public class MySqlProductDao extends MySqlDaoBase implements ProductDao
 {
-    public MySqlProductDao(DataSource dataSource)
+    public MySqlProductDao(DataSourceq dataSource)
     {
         super(dataSource);
     }
