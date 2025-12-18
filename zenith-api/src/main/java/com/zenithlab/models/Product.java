@@ -13,6 +13,7 @@ public class Product
     private int stock;
     private boolean isFeatured;
     private String imageUrl;
+    private String buyerRequirement;
 
     public Product()
     {
@@ -119,5 +120,15 @@ public class Product
     public void setImageUrl(String imageUrl)
     {
         this.imageUrl = imageUrl;
+    }
+
+    public String getBuyerRequirement()
+    {
+        return buyerRequirement;
+    }
+
+    public void setBuyerRequirement(String buyerRequirement)
+    {
+        this.buyerRequirement = buyerRequirement;
     }
 }

@@ -115,8 +115,12 @@ public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao
         String city = row.getString("city");
         String state = row.getString("state");
         String zip = row.getString("zip");
+        String accountType = row.getString("account_type");
 
-        return new Profile(userId, firstName, lastName, phone, email, address, city, state, zip);
+        Profile profile = new Profile(userId, firstName, lastName, phone, email, address, city, state, zip);
+        profile.setAccountType(accountType);
+
+        return profile;
     }
 
 }

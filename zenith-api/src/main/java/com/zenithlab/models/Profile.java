@@ -11,6 +11,7 @@ public class Profile
     private String city = "";
     private String state = "";
     private String zip = "";
+    private String accountType;
 
     public Profile()
     {
@@ -117,5 +118,15 @@ public class Profile
     public void setZip(String zip)
     {
         this.zip = zip;
+    }
+
+    public String getAccountType()
+    {
+        return accountType;
+    }
+
+    public void setAccountType(String accountType)
+    {
+        this.accountType = accountType;
     }
 }
