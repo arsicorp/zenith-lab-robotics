@@ -9,6 +9,7 @@ import com.zenithlab.models.Product;
 import com.zenithlab.data.ProductDao;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -106,6 +107,36 @@ public class ProductsController
             productDao.delete(id);
         }
         catch(Exception ex)
+        {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+        }
+    }
+
+    @GetMapping("/compare")
+    @PreAuthorize("permitAll()")
+    public List<Product> compareProducts(@RequestParam String ids)
+    {
+        try
+        {
+            // parse comma-separated ids
+            String[] idArray = ids.split(",");
+            List<Product> products = new ArrayList<>();
+
+            // get up to 3 products
+            int limit = Math.min(idArray.length, 3);
+            for (int i = 0; i < limit; i++)
+            {
+                int productId = Integer.parseInt(idArray[i].trim());
+                Product product = productDao.getById(productId);
+                if (product != null)
+                {
+                    products.add(product);
+                }
+            }
+
+            return products;
+        }
+        catch (Exception ex)
         {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
