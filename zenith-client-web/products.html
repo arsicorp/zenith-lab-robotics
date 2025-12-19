@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - Zenith Lab</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- navigation (same as homepage) -->
+    <nav>
+        <a href="index.html" class="logo">
+            <span>🤖</span>
+            <span>ZENITH LAB</span>
+        </a>
+
+        <ul class="nav-links">
+            <li><a href="products.html">Products</a></li>
+            <li><a href="compare.html">Compare</a></li>
+            <li><a href="careers.html">Careers</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+
+        <div class="nav-actions">
+            <a href="cart.html" class="cart-icon">
+                🛒
+                <span class="cart-badge">0</span>
+            </a>
+            <div class="account-btn">
+                <a href="login.html">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="products-page">
+            <div class="container">
+                <div class="page-header">
+                    <h1>OUR ROBOTS</h1>
+                    <p>Advanced humanoid robotics for every industry</p>
+                </div>
+
+                <div class="products-layout">
+                    <!-- filters sidebar -->
+                    <aside class="filters-sidebar">
+                        <h3>Filter Products</h3>
+
+                        <div class="filter-group">
+                            <h4>Category</h4>
+                            <div id="category-filters">
+                                <!-- loaded from api -->
+                            </div>
+                        </div>
+
+                        <div class="filter-group">
+                            <h4>Price Range</h4>
+                            <input type="number" id="min-price" placeholder="Min price">
+                            <input type="number" id="max-price" placeholder="Max price">
+                            <button onclick="applyFilters()" class="btn btn-primary btn-small">Apply</button>
+                        </div>
+
+                        <div class="filter-group">
+                            <h4>Color</h4>
+                            <select id="color-filter">
+                                <option value="">All Colors</option>
+                                <option value="Ceramic Sand">Ceramic Sand</option>
+                                <option value="Raw Titanium">Raw Titanium</option>
+                                <option value="Stellar White">Stellar White</option>
+                                <option value="Molten Orange">Molten Orange</option>
+                                <option value="Phantom Black">Phantom Black</option>
+                                <option value="Boreal Green">Boreal Green</option>
+                            </select>
+                        </div>
+
+                        <button onclick="clearFilters()" class="btn btn-secondary btn-small">Clear Filters</button>
+                    </aside>
+
+                    <!-- products grid -->
+                    <div class="products-content">
+                        <div class="products-toolbar">
+                            <p class="product-count"><span id="product-count">0</span> products</p>
+                            <button onclick="toggleCompareMode()" class="btn btn-secondary btn-small">
+                                Compare Products
+                            </button>
+                        </div>
+
+                        <div class="product-grid" id="products-grid">
+                            <!-- products loaded here -->
+                        </div>
+
+                        <!-- compare bar (hidden by default) -->
+                        <div class="compare-bar" id="compare-bar" style="display: none;">
+                            <div class="compare-content">
+                                <span id="compare-count">0 / 3 selected</span>
+                                <button onclick="viewComparison()" class="btn btn-primary btn-small">View Comparison</button>
+                                <button onclick="clearComparison()" class="btn btn-secondary btn-small">Clear</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <h3>ZENITH LAB</h3>
+                <p>Building the future of humanoid robotics</p>
+            </div>
+
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>Products</h4>
+                    <a href="products.html?category=1">Household</a>
+                    <a href="products.html?category=2">Industrial</a>
+                    <a href="products.html?category=3">Medical</a>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <a href="careers.html">Careers</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Support</h4>
+                    <a href="contact.html">Contact Sales</a>
+                    <a href="#">Documentation</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2025 Zenith Lab. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/lib/axios.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/nav.js"></script>
+    <script src="js/products.js"></script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - Zenith Lab</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- navigation -->
+    <nav>
+        <a href="index.html" class="logo">
+            <span>🤖</span>
+            <span>ZENITH LAB</span>
+        </a>
+
+        <ul class="nav-links">
+            <li><a href="products.html">Products</a></li>
+            <li><a href="compare.html">Compare</a></li>
+            <li><a href="careers.html">Careers</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+
+        <div class="nav-actions">
+            <a href="cart.html" class="cart-icon">
+                🛒
+                <span class="cart-badge">0</span>
+            </a>
+            <div class="account-btn">
+                <a href="login.html">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="product-detail">
+            <div class="container">
+                <a href="products.html" class="back-link">← Back to Products</a>
+
+                <div class="product-detail-layout" id="product-detail">
+                    <!-- loaded from api -->
+                </div>
+
+                <!-- specifications section -->
+                <div class="specifications" id="specifications">
+                    <!-- loaded from api -->
+                </div>
+
+                <!-- compatible accessories -->
+                <div class="accessories-section" id="accessories-section" style="display: none;">
+                    <h2>COMPATIBLE ACCESSORIES</h2>
+                    <div class="product-grid" id="accessories-grid">
+                        <!-- loaded from api -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <h3>ZENITH LAB</h3>
+                <p>Building the future of humanoid robotics</p>
+            </div>
+
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>Products</h4>
+                    <a href="products.html?category=1">Household</a>
+                    <a href="products.html?category=2">Industrial</a>
+                    <a href="products.html?category=3">Medical</a>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <a href="careers.html">Careers</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Support</h4>
+                    <a href="contact.html">Contact Sales</a>
+                    <a href="#">Documentation</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2025 Zenith Lab. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/lib/axios.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/nav.js"></script>
+    <script src="js/product-detail.js"></script>
+</body>
+</html>
