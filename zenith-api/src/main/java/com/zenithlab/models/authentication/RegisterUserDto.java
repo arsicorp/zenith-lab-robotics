@@ -13,10 +13,14 @@ public class RegisterUserDto {
     private String username;
     @NotEmpty
     private String password;
-    @NotEmpty
     private String confirmPassword;
-    @NotEmpty(message = "Please select a role for this user.")
     private String role;
+
+    // Profile fields
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String phone;
 
     public String getUsername() {
         return username;
@@ -43,10 +47,42 @@ public class RegisterUserDto {
     }
 
     public String getRole() {
-        return role;
+        return role != null ? role : "USER";
     }
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getFirstName() {
+        return firstName != null ? firstName : "";
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName != null ? lastName : "";
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email != null ? email : "";
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone != null ? phone : "";
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

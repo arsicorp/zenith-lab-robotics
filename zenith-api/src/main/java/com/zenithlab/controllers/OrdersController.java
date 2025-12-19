@@ -12,6 +12,7 @@ import com.zenithlab.data.ShoppingCartDao;
 import com.zenithlab.data.UserDao;
 import com.zenithlab.models.*;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalDate;
@@ -40,7 +41,7 @@ public class OrdersController
     }
 
     @PostMapping("")
-    public Order checkout(Principal principal)
+    public Order checkout(@Valid @RequestBody CheckoutDto checkoutDto, Principal principal)
     {
         try
         {
@@ -69,15 +70,11 @@ public class OrdersController
 
             // validate buyer restrictions
             String accountType = profile.getAccountType();
-            System.out.println("===== BUYER RESTRICTION VALIDATION =====");
-            System.out.println("User account type: " + (accountType != null ? accountType : "NULL"));
 
             for (ShoppingCartItem cartItem : cart.getItems().values())
             {
                 Product product = cartItem.getProduct();
                 String buyerRequirement = product.getBuyerRequirement();
-
-                System.out.println("Product: " + product.getName() + " | Buyer Requirement: " + (buyerRequirement != null ? buyerRequirement : "NULL"));
 
                 // validate buyer restrictions
                 if (buyerRequirement != null && !buyerRequirement.isEmpty())
@@ -85,33 +82,21 @@ public class OrdersController
                     // check if user account type matches the requirement
                     if (buyerRequirement.equals("BUSINESS") && !"BUSINESS".equals(accountType))
                     {
-                        System.out.println("VALIDATION FAILED: Product requires BUSINESS but user has " + accountType);
                         throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                             "Product '" + product.getName() + "' requires a BUSINESS account");
                     }
                     else if (buyerRequirement.equals("MEDICAL") && !"MEDICAL".equals(accountType))
                     {
-                        System.out.println("VALIDATION FAILED: Product requires MEDICAL but user has " + accountType);
                         throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                             "Product '" + product.getName() + "' requires a MEDICAL account");
                     }
                     else if (buyerRequirement.equals("GOVERNMENT") && !"GOVERNMENT".equals(accountType))
                     {
-                        System.out.println("VALIDATION FAILED: Product requires GOVERNMENT but user has " + accountType);
                         throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                             "Product '" + product.getName() + "' requires a GOVERNMENT account");
                     }
-                    else
-                    {
-                        System.out.println("VALIDATION PASSED: User account type matches requirement");
-                    }
-                }
-                else
-                {
-                    System.out.println("VALIDATION SKIPPED: No buyer requirement set for this product");
                 }
             }
-            System.out.println("===== VALIDATION COMPLETE =====");
 
             // calculate order total from cart
             BigDecimal orderTotal = cart.getTotal();
@@ -120,11 +105,11 @@ public class OrdersController
             Order order = new Order();
             order.setUserId(userId);
             order.setDate(LocalDate.now());
-            // copy address from profile
-            order.setAddress(profile.getAddress());
-            order.setCity(profile.getCity());
-            order.setState(profile.getState());
-            order.setZip(profile.getZip());
+            // use shipping address from checkout form
+            order.setAddress(checkoutDto.getAddress());
+            order.setCity(checkoutDto.getCity());
+            order.setState(checkoutDto.getState());
+            order.setZip(checkoutDto.getZip());
             order.setShippingAmount(BigDecimal.ZERO);
             order.setOrderTotal(orderTotal);
 
@@ -223,8 +208,7 @@ public class OrdersController
         }
         catch(Exception ex)
         {
-            ex.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "error: " + ex.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to retrieve order");
         }
     }
 }

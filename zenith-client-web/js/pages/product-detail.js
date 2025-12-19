@@ -55,16 +55,13 @@ const productDetail = {
       ? utils.canBuyProduct(auth.getAccountType(), p.buyerRequirement)
       : true;
     
+    // use detailImageUrl if available, otherwise fall back to imageUrl
+    const displayImage = p.detailImageUrl || p.imageUrl || '';
+
     container.innerHTML = `
-      <div class="breadcrumb">
-        <a href="index.html">Home</a> /
-        <a href="products.html">Products</a> /
-        <span>${p.name}</span>
-      </div>
-      
       <div class="product-layout">
         <div class="product-image-main" style="background: ${utils.getRobotGradient(p.name)}">
-          <img src="${p.imageUrl || ''}" alt="${p.name}" onerror="this.style.display='none'" />
+          <img src="${displayImage}" alt="${p.name}" onerror="this.style.display='none'" />
         </div>
         
         <div class="product-info">
@@ -74,11 +71,9 @@ const productDetail = {
           
           ${buyerText && auth.isLoggedIn() && !canBuy ? `
             <div class="buyer-warning">
-              <div class="buyer-warning-icon">⚠️</div>
-              <div class="buyer-warning-text">
-                <h4>${buyerText}</h4>
-                <p>Your account type does not allow purchasing this product. Contact sales for assistance.</p>
-              </div>
+              <h4>Account Verification Required</h4>
+              <p>${buyerText}. Your current account type does not permit purchasing this product.</p>
+              <a href="profile.html" class="buyer-warning-link">Update Account Type</a>
             </div>
           ` : ''}
           
@@ -218,7 +213,7 @@ const productDetail = {
       `).join('');
       
     } catch (error) {
-      console.error('Failed to load accessories:', error);
+      // silently fail - accessories section is optional
     }
   },
   

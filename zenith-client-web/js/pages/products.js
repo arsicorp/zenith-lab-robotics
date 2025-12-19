@@ -1,65 +1,56 @@
 // products listing page - filters, categories, sorting
 
 const products = {
-  currentFilters: {
-    cat: null,
-    minPrice: null,
-    maxPrice: null,
-    color: null
-  },
-  
+
   // initialize products page
   async init() {
-    await this.loadCategories();
-    await this.loadProducts();
-    this.setupFilters();
-  },
-  
-  // load categories for sidebar
-  async loadCategories() {
-    try {
-      const categories = await api.getCategories();
-      const container = document.getElementById('category-filters');
-      if (!container) return;
-      
-      container.innerHTML = categories.map(cat => `
-        <div class="form-check">
-          <input type="radio" name="category" value="${cat.categoryId}" id="cat-${cat.categoryId}">
-          <label for="cat-${cat.categoryId}">${cat.name}</label>
-        </div>
-      `).join('');
-      
-      // add "all categories" option
-      container.insertAdjacentHTML('afterbegin', `
-        <div class="form-check">
-          <input type="radio" name="category" value="" id="cat-all" checked>
-          <label for="cat-all">All Categories</label>
-        </div>
-      `);
-      
-    } catch (error) {
-      console.error('Failed to load categories:', error);
+    // Check for type parameter (robots or accessories)
+    const urlParams = new URLSearchParams(window.location.search);
+    const productType = urlParams.get('type');
+
+    // Update page title based on type
+    const pageTitle = document.querySelector('h1');
+
+    if (pageTitle) {
+      if (productType === 'robots') {
+        pageTitle.textContent = 'Robots';
+      } else if (productType === 'accessories') {
+        pageTitle.textContent = 'Accessories';
+      } else {
+        pageTitle.textContent = 'All Products';
+      }
     }
+
+    // Store product type for filtering
+    this.productType = productType;
+
+    await this.loadProducts();
   },
-  
   // load and display products
   async loadProducts() {
     const container = document.getElementById('products-grid');
     if (!container) return;
-    
+
     try {
       // show loading
       utils.showSkeletons('products-grid', 9);
-      
-      // get products with filters
-      const productList = await api.getProducts(this.currentFilters);
-      
+
+      // Fetch all products and filter client-side for reliability
+      let productList = await api.getProducts({});
+
+      // Filter by type: robots (categories 1-6) or accessories (category 7)
+      if (this.productType === 'robots') {
+        productList = productList.filter(p => p.categoryId >= 1 && p.categoryId <= 6);
+      } else if (this.productType === 'accessories') {
+        productList = productList.filter(p => p.categoryId === 7);
+      }
+
       // update count
       this.updateProductCount(productList.length);
-      
+
       // display products
       this.displayProducts(productList);
-      
+
     } catch (error) {
       container.innerHTML = `
         <div class="error-message" style="grid-column: 1 / -1;">
@@ -77,7 +68,6 @@ const products = {
     if (productList.length === 0) {
       container.innerHTML = `
         <div class="empty-state" style="grid-column: 1 / -1;">
-          <div class="empty-state-icon">🤖</div>
           <h3>No products found</h3>
           <p>Try adjusting your filters</p>
         </div>
@@ -86,12 +76,15 @@ const products = {
     }
     
     container.innerHTML = productList.map(product => {
-      const buyerText = utils.getBuyerRequirementText(product.buyerRequirement);
-      
+      // Check if product has image, otherwise use placeholder
+      const imageHtml = product.imageUrl && product.imageUrl !== ''
+        ? `<img src="${product.imageUrl}" alt="${product.name}">`
+        : `<div class="product-image-placeholder"></div>`;
+
       return `
         <div class="product-card" onclick="window.location.href='product-detail.html?id=${product.productId}'">
-          <div class="product-card-image" style="background: ${utils.getRobotGradient(product.name)}">
-            ${buyerText ? `<span class="product-badge restricted">${buyerText}</span>` : ''}
+          <div class="product-card-image">
+            ${imageHtml}
           </div>
           <div class="product-card-content">
             <h3 class="product-card-title">${product.name}</h3>
@@ -116,77 +109,6 @@ const products = {
       countEl.textContent = `${count} products`;
     }
   },
-  
-  // setup filter event listeners
-  setupFilters() {
-    // category filters
-    const categoryInputs = document.querySelectorAll('input[name="category"]');
-    categoryInputs.forEach(input => {
-      input.addEventListener('change', (e) => {
-        this.currentFilters.cat = e.target.value || null;
-        this.loadProducts();
-      });
-    });
-    
-    // price filters
-    const minPriceInput = document.getElementById('min-price');
-    const maxPriceInput = document.getElementById('max-price');
-    
-    if (minPriceInput) {
-      minPriceInput.addEventListener('change', utils.debounce((e) => {
-        this.currentFilters.minPrice = e.target.value || null;
-        this.loadProducts();
-      }, 500));
-    }
-    
-    if (maxPriceInput) {
-      maxPriceInput.addEventListener('change', utils.debounce((e) => {
-        this.currentFilters.maxPrice = e.target.value || null;
-        this.loadProducts();
-      }, 500));
-    }
-    
-    // color filter
-    const colorSelect = document.getElementById('color-filter');
-    if (colorSelect) {
-      colorSelect.addEventListener('change', (e) => {
-        this.currentFilters.color = e.target.value || null;
-        this.loadProducts();
-      });
-    }
-    
-    // clear filters button
-    const clearBtn = document.getElementById('clear-filters');
-    if (clearBtn) {
-      clearBtn.addEventListener('click', () => {
-        this.clearFilters();
-      });
-    }
-  },
-  
-  // clear all filters
-  clearFilters() {
-    this.currentFilters = {
-      cat: null,
-      minPrice: null,
-      maxPrice: null,
-      color: null
-    };
-    
-    // reset form inputs
-    document.getElementById('cat-all')?.click();
-    
-    const minPrice = document.getElementById('min-price');
-    const maxPrice = document.getElementById('max-price');
-    const color = document.getElementById('color-filter');
-    
-    if (minPrice) minPrice.value = '';
-    if (maxPrice) maxPrice.value = '';
-    if (color) color.value = '';
-    
-    this.loadProducts();
-  },
-  
   // add product to comparison list
   addToCompare(productId) {
     let compareList = JSON.parse(localStorage.getItem('compare_list') || '[]');

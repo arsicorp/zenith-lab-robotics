@@ -16,13 +16,32 @@ const cart = {
     try {
       // show loading
       utils.showLoading('cart-items');
-      
+
       // get cart
-      this.cartData = await api.getCart();
-      
+      const response = await api.getCart();
+
+      // handle different response formats from backend
+      // backend returns { items: { "1": {...}, "2": {...} } } as a Map
+      // we need to convert it to an array for easier handling
+      let items = [];
+
+      if (response && response.items) {
+        if (Array.isArray(response.items)) {
+          // already an array
+          items = response.items;
+        } else if (typeof response.items === 'object') {
+          // convert Map/Object to array
+          items = Object.values(response.items);
+        }
+      } else if (Array.isArray(response)) {
+        items = response;
+      }
+
+      this.cartData = { items };
+
       // display cart
       this.displayCart();
-      
+
     } catch (error) {
       const container = document.getElementById('cart-items');
       if (container) {
@@ -48,10 +67,9 @@ const cart = {
     if (items.length === 0) {
       itemsContainer.innerHTML = `
         <div class="cart-empty">
-          <div class="cart-empty-icon">🛒</div>
           <h3>Your cart is empty</h3>
-          <p>Add some robots to get started!</p>
-          <a href="products.html" class="btn btn-primary mt-lg">Browse Products</a>
+          <p>Add some robots to get started</p>
+          <a href="products.html?type=robots" class="btn btn-primary">Browse Products</a>
         </div>
       `;
       summaryContainer.innerHTML = '';
@@ -64,21 +82,21 @@ const cart = {
         <div class="cart-item-image" style="background: ${utils.getRobotGradient(item.product.name)}">
           <img src="${item.product.imageUrl || ''}" alt="${item.product.name}" onerror="this.style.display='none'" />
         </div>
-        
+
         <div class="cart-item-details">
           <h3>${item.product.name}</h3>
-          <div class="cart-item-price">${utils.formatPrice(item.product.price)}</div>
+          <div class="cart-item-price">${utils.formatPrice(item.product.price)} each</div>
           <div class="cart-item-actions">
             <div class="quantity-selector">
-              <button class="quantity-btn" onclick="cart.updateQuantity(${item.product.productId}, ${item.quantity - 1})">-</button>
+              <button class="quantity-btn" onclick="cart.updateQuantity(${item.product.productId}, ${item.quantity - 1})">−</button>
               <input type="number" class="quantity-input" value="${item.quantity}" readonly>
               <button class="quantity-btn" onclick="cart.updateQuantity(${item.product.productId}, ${item.quantity + 1})">+</button>
             </div>
           </div>
         </div>
-        
+
         <div class="cart-item-right">
-          <div style="font-size: 1.25rem; font-weight: 700;">${utils.formatPrice(item.product.price * item.quantity)}</div>
+          <div class="cart-item-total">${utils.formatPrice(item.product.price * item.quantity)}</div>
           <button class="cart-item-remove" onclick="cart.removeItem(${item.product.productId})">Remove</button>
         </div>
       </div>
@@ -156,15 +174,32 @@ const cart = {
   // remove item from cart
   async removeItem(productId) {
     if (!confirm('Remove this item from cart?')) return;
-    
+
     try {
-      await api.updateCartItem(productId, 0);
-      await this.loadCart();
-      
+      // immediately remove from UI for instant feedback
+      const itemElement = document.querySelector(`.cart-item[data-product-id="${productId}"]`);
+      if (itemElement) {
+        itemElement.style.opacity = '0.5';
+        itemElement.style.pointerEvents = 'none';
+      }
+
+      // call API to remove item using DELETE endpoint
+      await api.removeCartItem(productId);
+
+      // remove from local cart data
+      if (this.cartData && this.cartData.items) {
+        this.cartData.items = this.cartData.items.filter(item => item.product.productId !== productId);
+      }
+
+      // re-render cart (will show empty state if no items left)
+      this.displayCart();
+
       // update nav badge
       nav.updateCartBadge();
-      
+
     } catch (error) {
+      // reload cart to restore state on error
+      await this.loadCart();
       alert(error.message || 'Failed to remove item');
     }
   },

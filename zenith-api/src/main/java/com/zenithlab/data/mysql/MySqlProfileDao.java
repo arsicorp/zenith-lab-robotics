@@ -18,8 +18,8 @@ public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao
     @Override
     public Profile create(Profile profile)
     {
-        String sql = "INSERT INTO profiles (user_id, first_name, last_name, phone, email, address, city, state, zip) " +
-                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO profiles (user_id, first_name, last_name, phone, email, address, city, state, zip, account_type) " +
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try(Connection connection = getConnection())
         {
@@ -33,6 +33,7 @@ public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao
             ps.setString(7, profile.getCity());
             ps.setString(8, profile.getState());
             ps.setString(9, profile.getZip());
+            ps.setString(10, profile.getAccountType() != null ? profile.getAccountType() : "PERSONAL");
 
             ps.executeUpdate();
 

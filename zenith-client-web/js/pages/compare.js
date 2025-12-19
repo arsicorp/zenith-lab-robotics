@@ -1,186 +1,239 @@
-// product comparison page - compare up to 3 products side by side
+// product comparison page - compare 2-3 robots side by side with dropdown selection
 
 const compare = {
-  compareList: [],
-  products: [],
-  
+  selectedProducts: [],
+  allProducts: [],
+  showingComparison: false,
+
   // initialize compare page
   async init() {
-    this.loadCompareList();
-    
-    if (this.compareList.length === 0) {
-      this.showEmptyState();
-      return;
-    }
-    
-    await this.loadProducts();
-    this.displayComparison();
+    await this.loadAllProducts();
+    this.showSelectionInterface();
   },
-  
-  // load compare list from local storage
-  loadCompareList() {
-    const stored = localStorage.getItem('compare_list');
-    this.compareList = stored ? JSON.parse(stored) : [];
-  },
-  
-  // show empty state
-  showEmptyState() {
-    const container = document.getElementById('compare-container');
-    if (!container) return;
-    
-    container.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-state-icon">⚖️</div>
-        <h3>No products to compare</h3>
-        <p>Add products from the products page to compare them side by side.</p>
-        <a href="products.html" class="btn btn-primary mt-lg">Browse Products</a>
-      </div>
-    `;
-  },
-  
-  // load products data
-  async loadProducts() {
+
+  // load all robot products for dropdown
+  async loadAllProducts() {
     try {
-      // show loading
-      utils.showLoading('compare-container');
-      
-      // get products
-      this.products = await api.compareProducts(this.compareList);
-      
+      // Get all products and filter to robots only (categories 1-6)
+      const allProducts = await api.getProducts({});
+      this.allProducts = allProducts.filter(p => p.categoryId >= 1 && p.categoryId <= 6);
     } catch (error) {
       const container = document.getElementById('compare-container');
       if (container) {
         container.innerHTML = `
           <div class="error-message">
-            Failed to load products. <button onclick="compare.loadProducts()" class="btn btn-small btn-primary">Try Again</button>
+            Failed to load products. <button onclick="compare.init()" class="btn btn-small btn-primary">Try Again</button>
           </div>
         `;
       }
     }
   },
-  
-  // display comparison table
-  displayComparison() {
+
+  // show dropdown selection interface - three column horizontal layout
+  showSelectionInterface() {
     const container = document.getElementById('compare-container');
     if (!container) return;
-    
-    if (this.products.length === 0) {
-      this.showEmptyState();
+
+    this.showingComparison = false;
+
+    container.innerHTML = `
+      <div class="compare-selection">
+        <div class="selection-dropdowns-horizontal">
+          ${this.renderDropdown(0, 'Select Robot 1')}
+          ${this.renderDropdown(1, 'Select Robot 2')}
+          ${this.renderDropdown(2, 'Select Robot 3')}
+        </div>
+
+        <div class="selection-actions">
+          <button class="btn btn-primary" onclick="compare.showComparison()" id="compare-btn" disabled>
+            Compare
+          </button>
+          <button class="btn btn-outline" onclick="compare.clearAll()">
+            Clear
+          </button>
+        </div>
+      </div>
+    `;
+
+    // Setup dropdown event listeners
+    this.setupDropdowns();
+  },
+
+  // render dropdown for robot selection
+  renderDropdown(index, label) {
+    return `
+      <div class="selection-column">
+        <label class="selection-label">${label}${index === 2 ? ' (Optional)' : ''}</label>
+        <select class="form-select selection-dropdown" data-index="${index}">
+          <option value="">Select a robot...</option>
+          ${this.allProducts.map(p => `
+            <option value="${p.productId}">${p.name} - ${utils.formatPrice(p.price)}</option>
+          `).join('')}
+        </select>
+      </div>
+    `;
+  },
+
+  // setup dropdown event listeners
+  setupDropdowns() {
+    const dropdowns = document.querySelectorAll('.selection-dropdown');
+    dropdowns.forEach(dropdown => {
+      dropdown.addEventListener('change', (e) => {
+        const index = parseInt(e.target.dataset.index);
+        const productId = e.target.value ? parseInt(e.target.value) : null;
+
+        // Update selected products array
+        this.selectedProducts[index] = productId;
+
+        // Update compare button state
+        this.updateCompareButton();
+      });
+    });
+  },
+
+  // update compare button enabled/disabled state
+  updateCompareButton() {
+    const compareBtn = document.getElementById('compare-btn');
+    if (!compareBtn) return;
+
+    // Count valid selections (non-null)
+    const validSelections = this.selectedProducts.filter(id => id !== null && id !== undefined).length;
+
+    // Enable button if 2 or 3 products selected
+    compareBtn.disabled = validSelections < 2;
+  },
+
+  // show comparison table
+  async showComparison() {
+    // Filter out null/undefined selections
+    const productIds = this.selectedProducts.filter(id => id !== null && id !== undefined);
+
+    if (productIds.length < 2) {
+      alert('Please select at least 2 robots to compare');
       return;
     }
-    
-    container.innerHTML = `
-      <div class="mb-lg">
-        <button class="btn btn-secondary" onclick="compare.clearAll()">Clear All</button>
+
+    try {
+      // Show loading
+      const container = document.getElementById('compare-container');
+      utils.showLoading('compare-container');
+
+      // Get product details
+      const products = await api.compareProducts(productIds);
+
+      this.showingComparison = true;
+
+      // Display comparison with product cards and table
+      container.innerHTML = `
+        <div class="comparison-actions">
+          <button class="btn btn-secondary" onclick="compare.showSelectionInterface()">
+            Back to Selection
+          </button>
+          <button class="btn btn-outline" onclick="compare.clearAll()">
+            Clear All
+          </button>
+        </div>
+
+        <div class="compare-products-row">
+          ${products.map(p => this.renderProductCard(p)).join('')}
+        </div>
+
+        <div class="compare-table-wrapper">
+          <table class="compare-table">
+            <tbody>
+              ${this.renderRow('Category', products, p => this.getCategoryName(p.categoryId))}
+              ${this.renderRow('Color', products, p => p.color)}
+              ${this.renderRow('Buyer Requirement', products, p => utils.getBuyerRequirementText(p.buyerRequirement) || 'None')}
+              ${this.renderRow('AI Model', products, p => p.aiModel)}
+              ${this.renderRow('Height', products, p => p.heightCm ? `${p.heightCm} cm` : '-')}
+              ${this.renderRow('Weight', products, p => p.weightKg ? `${p.weightKg} kg` : '-')}
+              ${this.renderRow('Payload Capacity', products, p => p.payloadKg ? `${p.payloadKg} kg` : '-')}
+              ${this.renderRow('Battery Life', products, p => p.batteryHours ? `${p.batteryHours} hours` : '-')}
+              ${this.renderRow('Max Speed', products, p => p.speedKmh ? `${p.speedKmh} km/h` : '-')}
+              ${this.renderRow('Autonomy Level', products, p => p.autonomyLevel || '-')}
+              ${this.renderRow('Warranty', products, p => p.warrantyYears ? `${p.warrantyYears} years` : '-')}
+            </tbody>
+          </table>
+        </div>
+      `;
+
+    } catch (error) {
+      alert('Failed to load comparison. Please try again.');
+    }
+  },
+
+  // render product card for comparison results
+  renderProductCard(product) {
+    const imageHtml = product.imageUrl && product.imageUrl !== ''
+      ? `<img src="${product.imageUrl}" alt="${product.name}" />`
+      : `<div class="product-image-placeholder"></div>`;
+
+    return `
+      <div class="compare-product-card">
+        <div class="compare-product-image">
+          ${imageHtml}
+        </div>
+        <h3 class="compare-product-name">${product.name}</h3>
+        <div class="compare-product-price">${utils.formatPrice(product.price)}</div>
+        <div class="compare-product-actions">
+          <button class="btn btn-primary btn-small" onclick="compare.addToCart(${product.productId})">
+            Add to Cart
+          </button>
+          <button class="btn btn-outline btn-small" onclick="window.location.href='product-detail.html?id=${product.productId}'">
+            View Details
+          </button>
+        </div>
       </div>
-      
-      <table class="compare-table">
-        <tbody>
-          ${this.renderImageRow()}
-          ${this.renderNameRow()}
-          ${this.renderPriceRow()}
-          ${this.renderRow('Category', p => p.categoryId)}
-          ${this.renderRow('Color', p => p.color)}
-          ${this.renderRow('Buyer Requirement', p => utils.getBuyerRequirementText(p.buyerRequirement) || 'None')}
-          ${this.renderRow('AI Model', p => p.aiModel)}
-          ${this.renderRow('Height', p => p.heightCm ? `${p.heightCm} cm` : '-')}
-          ${this.renderRow('Weight', p => p.weightKg ? `${p.weightKg} kg` : '-')}
-          ${this.renderRow('Payload', p => p.payloadKg ? `${p.payloadKg} kg` : '-')}
-          ${this.renderRow('Battery Life', p => p.batteryHours ? `${p.batteryHours} hours` : '-')}
-          ${this.renderRow('Max Speed', p => p.speedKmh ? `${p.speedKmh} km/h` : '-')}
-          ${this.renderRow('Autonomy Level', p => p.autonomyLevel)}
-          ${this.renderRow('Warranty', p => p.warrantyYears ? `${p.warrantyYears} years` : '-')}
-          ${this.renderActionRow()}
-        </tbody>
-      </table>
     `;
   },
-  
-  // render image row
-  renderImageRow() {
-    return `
-      <tr>
-        <th>Image</th>
-        ${this.products.map(p => `
-          <td>
-            <div class="compare-image" style="background: ${utils.getRobotGradient(p.name)}"></div>
-          </td>
-        `).join('')}
-      </tr>
-    `;
+
+  // get category name from ID
+  getCategoryName(categoryId) {
+    const categories = {
+      1: 'Household',
+      2: 'Industrial',
+      3: 'Medical',
+      4: 'Military',
+      5: 'Research',
+      6: 'Hazard'
+    };
+    return categories[categoryId] || '-';
   },
-  
-  // render name row
-  renderNameRow() {
-    return `
-      <tr>
-        <th>Product</th>
-        ${this.products.map(p => `
-          <td><strong>${p.name}</strong></td>
-        `).join('')}
-      </tr>
-    `;
-  },
-  
-  // render price row
-  renderPriceRow() {
-    return `
-      <tr>
-        <th>Price</th>
-        ${this.products.map(p => `
-          <td><strong style="color: var(--blue); font-size: 1.25rem;">${utils.formatPrice(p.price)}</strong></td>
-        `).join('')}
-      </tr>
-    `;
-  },
-  
+
   // render generic row
-  renderRow(label, getValue) {
+  renderRow(label, products, getValue) {
     return `
       <tr>
         <th>${label}</th>
-        ${this.products.map(p => {
+        ${products.map(p => {
           const value = getValue(p);
           return `<td>${value || '-'}</td>`;
         }).join('')}
       </tr>
     `;
   },
-  
-  // render action buttons row
-  renderActionRow() {
-    return `
-      <tr>
-        <th>Actions</th>
-        ${this.products.map(p => `
-          <td>
-            <button class="btn btn-primary btn-small btn-full mb-sm" onclick="window.location.href='product-detail.html?id=${p.productId}'">
-              View Details
-            </button>
-            <button class="btn btn-secondary btn-small btn-full" onclick="compare.removeProduct(${p.productId})">
-              Remove
-            </button>
-          </td>
-        `).join('')}
-      </tr>
-    `;
+
+  // add to cart from comparison
+  async addToCart(productId) {
+    if (!auth.isLoggedIn()) {
+      window.location.href = 'auth.html';
+      return;
+    }
+
+    try {
+      await api.addToCart(productId, 1);
+      nav.updateCartBadge();
+      nav.bounceCartBadge();
+      alert('Added to cart!');
+    } catch (error) {
+      alert(error.message || 'Failed to add to cart');
+    }
   },
-  
-  // remove product from comparison
-  removeProduct(productId) {
-    this.compareList = this.compareList.filter(id => id !== productId);
-    localStorage.setItem('compare_list', JSON.stringify(this.compareList));
-    
-    // reload page
-    window.location.reload();
-  },
-  
-  // clear all products
+
+  // clear all selections
   clearAll() {
-    if (!confirm('Remove all products from comparison?')) return;
-    
-    localStorage.removeItem('compare_list');
-    window.location.reload();
+    this.selectedProducts = [];
+    this.showSelectionInterface();
   }
 };
 

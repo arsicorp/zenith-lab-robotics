@@ -77,7 +77,7 @@ public class ShoppingCartController
     }
 
     @PutMapping("products/{productId}")
-    public void updateProduct(@PathVariable int productId, @RequestBody Map<String, Integer> update, Principal principal)
+    public ShoppingCart updateProduct(@PathVariable int productId, @RequestBody Map<String, Integer> update, Principal principal)
     {
         try
         {
@@ -88,10 +88,17 @@ public class ShoppingCartController
             int userId = user.getId();
 
             // get quantity from request body
-            int quantity = update.get("quantity");
+            Integer quantity = update.get("quantity");
+            if (quantity == null || quantity < 1)
+            {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid quantity");
+            }
 
             // update product quantity in cart
             shoppingCartDao.updateItem(userId, productId, quantity);
+
+            // return the updated cart
+            return shoppingCartDao.getByUserId(userId);
         }
         catch(Exception e)
         {
@@ -112,6 +119,29 @@ public class ShoppingCartController
 
             // clear all items from cart
             shoppingCartDao.clearCart(userId);
+        }
+        catch(Exception e)
+        {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+        }
+    }
+
+    @DeleteMapping("products/{productId}")
+    public ShoppingCart removeProduct(@PathVariable int productId, Principal principal)
+    {
+        try
+        {
+            // get the currently logged in username
+            String userName = principal.getName();
+            // find database user by username
+            User user = userDao.getByUserName(userName);
+            int userId = user.getId();
+
+            // remove product from cart
+            shoppingCartDao.removeItem(userId, productId);
+
+            // return the updated cart
+            return shoppingCartDao.getByUserId(userId);
         }
         catch(Exception e)
         {

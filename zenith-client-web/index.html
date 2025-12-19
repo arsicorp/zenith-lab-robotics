@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zenith Lab - Humanoid Robotics</title>
-  
+
   <!-- css files -->
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
@@ -18,17 +18,22 @@
       <a href="index.html" class="nav-logo">ZENITH LAB</a>
 
       <ul class="nav-links" id="nav-links">
-        <li><a href="products.html">Products</a></li>
+        <li><a href="products.html?type=robots">Robots</a></li>
+        <li><a href="products.html?type=accessories">Accessories</a></li>
         <li><a href="compare.html">Compare</a></li>
         <li><a href="careers.html">Careers</a></li>
         <li><a href="contact.html">Contact</a></li>
       </ul>
 
       <div class="nav-actions">
-        <div class="nav-cart" onclick="window.location.href='cart.html'">
-          🛒
+        <a href="cart.html" class="nav-cart" id="nav-cart">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
           <span class="cart-badge" id="cart-badge" style="display: none;">0</span>
-        </div>
+        </a>
 
         <div class="nav-account">
           <div class="account-trigger" id="account-trigger">Login</div>
@@ -39,7 +44,7 @@
             <a href="#" id="logout-btn">Logout</a>
           </div>
         </div>
-        
+
         <div class="nav-toggle" id="nav-toggle">
           <span></span>
           <span></span>
@@ -48,121 +53,98 @@
       </div>
     </div>
   </nav>
-  
-  <!-- hero section -->
-  <section class="hero">
-    <div class="container">
+
+  <!-- hero section - full height with image overlay -->
+  <section class="hero-full">
+    <div class="hero-image-container">
+      <img src="images/hero-image.jpg" alt="Humanoid Robot" class="hero-image">
+    </div>
+    <div class="hero-overlay">
       <div class="hero-content">
-        <div class="hero-text">
-          <h1>KODA HOUSEHOLD ROBOT</h1>
-          <p>Your intelligent home companion. Advanced AI-powered robot for cleaning, cooking, elderly care, and more.</p>
-          <div class="hero-price">$34,999.00</div>
-          <div style="display: flex; gap: 1rem;">
-            <a href="product-detail.html?id=1" class="btn btn-primary btn-large">View Details</a>
-            <a href="products.html" class="btn btn-outline btn-large">Explore Our Fleet</a>
-          </div>
-        </div>
-        <div class="hero-image"></div>
+        <h1 class="hero-title">The Future of<br>Humanoid Robotics</h1>
+        <p class="hero-subtitle">Autonomous systems designed for real-world applications</p>
+        <a href="products.html?type=robots" class="hero-cta">View Inventory</a>
       </div>
     </div>
   </section>
-  
-  <!-- featured robots -->
-  <section class="featured-robots">
-    <div class="container">
-      <div class="section-title">
-        <h2>Our Robot Fleet</h2>
-        <p>Six specialized humanoid robots for every need</p>
-      </div>
-      
-      <div class="robots-grid" id="robots-grid">
-        <!-- loaded by home.js -->
-      </div>
-    </div>
-  </section>
-  
-  <!-- value propositions -->
-  <section class="value-props">
-    <div class="container">
-      <div class="section-title">
-        <h2>Why Zenith Lab</h2>
-      </div>
-      
-      <div class="props-grid">
-        <div class="prop-item">
-          <div class="prop-icon">🚀</div>
-          <h3>Innovation</h3>
-          <p>Cutting-edge AI and robotics technology. Our Neural OS powers fully autonomous operations.</p>
+
+  <!-- capabilities section - redesigned without emojis -->
+  <section class="capabilities-section">
+    <div class="capabilities-container">
+      <h2 class="capabilities-title">What Sets Us Apart</h2>
+
+      <div class="capabilities-grid">
+        <div class="capability-card">
+          <h3>Autonomous Intelligence</h3>
+          <p>Neural networks enabling real-time adaptation to complex environments and dynamic decision-making</p>
         </div>
-        
-        <div class="prop-item">
-          <div class="prop-icon">🛡️</div>
-          <h3>Reliability</h3>
-          <p>Industry-leading warranty and 24/7 support. Built to last with premium components.</p>
+
+        <div class="capability-card">
+          <h3>Industrial Performance</h3>
+          <p>Payload capacities from 15kg to 500kg for demanding manufacturing and logistics applications</p>
         </div>
-        
-        <div class="prop-item">
-          <div class="prop-icon">🤝</div>
-          <h3>Support</h3>
-          <p>Dedicated account managers and technical support team for all customers.</p>
+
+        <div class="capability-card">
+          <h3>Extended Operation</h3>
+          <p>Battery systems providing 8-18 hours runtime with rapid charging technology</p>
+        </div>
+
+        <div class="capability-card">
+          <h3>Security Compliance</h3>
+          <p>ITAR-compliant systems with encrypted communications and secure operation protocols</p>
+        </div>
+
+        <div class="capability-card">
+          <h3>Medical Certification</h3>
+          <p>FDA-certified platforms for surgical assistance and patient care applications</p>
+        </div>
+
+        <div class="capability-card">
+          <h3>Modular Architecture</h3>
+          <p>Hot-swappable components for rapid customization and minimal downtime maintenance</p>
         </div>
       </div>
     </div>
   </section>
-  
+
   <!-- cta section -->
-  <div class="container">
-    <div class="cta-section">
-      <h2>Join Our Team</h2>
-      <p>Help us build the future of humanoid robotics. We're hiring engineers, researchers, and innovators.</p>
-      <a href="careers.html" class="btn btn-large" style="background: white; color: var(--blue);">View Open Positions</a>
-    </div>
+  <div class="cta-section">
+    <h2>Join Our Team</h2>
+    <p>Help us build the future of humanoid robotics</p>
+    <a href="careers.html" class="btn btn-large" style="background: white; color: #000;">View Open Positions</a>
   </div>
-  
+
   <!-- footer -->
   <footer>
     <div class="footer-container">
       <div class="footer-grid">
-        <div class="footer-about">
-          <h3>ZENITH LAB</h3>
-          <p>Leading the humanoid robotics revolution. Specialized robots for household, industrial, medical, construction, defense, and research applications.</p>
-        </div>
-        
         <div class="footer-column">
           <h4>Products</h4>
-          <ul>
-            <li><a href="products.html?cat=1">Household</a></li>
-            <li><a href="products.html?cat=2">Industrial</a></li>
-            <li><a href="products.html?cat=3">Medical</a></li>
-            <li><a href="products.html?cat=4">Construction</a></li>
-            <li><a href="products.html?cat=5">Military</a></li>
-            <li><a href="products.html?cat=6">Research</a></li>
-          </ul>
+          <a href="products.html?type=robots">Robots</a>
+          <a href="products.html?type=accessories">Accessories</a>
+          <a href="compare.html">Compare</a>
         </div>
-        
+
         <div class="footer-column">
           <h4>Company</h4>
-          <ul>
-            <li><a href="careers.html">Careers</a></li>
-            <li><a href="contact.html">Contact</a></li>
-          </ul>
+          <a href="careers.html">Careers</a>
+          <a href="contact.html">Contact</a>
         </div>
-        
+
         <div class="footer-column">
-          <h4>Support</h4>
-          <ul>
-            <li><a href="compare.html">Compare Products</a></li>
-            <li><a href="profile.html">My Account</a></li>
-          </ul>
+          <h4>Account</h4>
+          <a href="profile.html">Profile</a>
+          <a href="cart.html">Cart</a>
+          <a href="auth.html">Login</a>
         </div>
       </div>
-      
+
       <div class="footer-bottom">
-        &copy; 2025 Zenith Lab. All rights reserved.
+        <span class="footer-logo">ZENITH LAB</span>
       </div>
     </div>
   </footer>
-  
+
   <!-- javascript files -->
   <script src="js/config.js"></script>
   <script src="js/utils.js"></script>

@@ -25,7 +25,7 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
 
         String sql = "SELECT sc.user_id, sc.product_id, sc.quantity, " +
                 "p.product_id, p.name, p.price, p.category_id, p.description, " +
-                "p.color, p.stock, p.featured, p.image_url, p.buyer_requirement " +
+                "p.color, p.stock, p.featured, p.image_url, p.detail_image_url, p.buyer_requirement " +
                 "FROM shopping_cart sc " +
                 "INNER JOIN products p ON sc.product_id = p.product_id " +
                 "WHERE sc.user_id = ?";
@@ -118,6 +118,25 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
     }
 
     @Override
+    public void removeItem(int userId, int productId)
+    {
+        String sql = "DELETE FROM shopping_cart WHERE user_id = ? AND product_id = ?";
+
+        try (Connection connection = getConnection())
+        {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, userId);
+            statement.setInt(2, productId);
+
+            statement.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void clearCart(int userId)
     {
         String sql = "DELETE FROM shopping_cart WHERE user_id = ?";
@@ -147,9 +166,11 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
         int stock = row.getInt("stock");
         boolean featured = row.getBoolean("featured");
         String imageUrl = row.getString("image_url");
+        String detailImageUrl = row.getString("detail_image_url");
         String buyerRequirement = row.getString("buyer_requirement");
 
         Product product = new Product(productId, name, price, categoryId, description, color, stock, featured, imageUrl);
+        product.setDetailImageUrl(detailImageUrl);
         product.setBuyerRequirement(buyerRequirement);
 
         // map shopping cart item data

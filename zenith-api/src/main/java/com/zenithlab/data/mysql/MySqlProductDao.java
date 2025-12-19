@@ -222,9 +222,11 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
         int stock = row.getInt("stock");
         boolean isFeatured = row.getBoolean("featured");
         String imageUrl = row.getString("image_url");
+        String detailImageUrl = row.getString("detail_image_url");
         String buyerRequirement = row.getString("buyer_requirement");
 
         Product product = new Product(productId, name, price, categoryId, description, color, stock, isFeatured, imageUrl);
+        product.setDetailImageUrl(detailImageUrl);
         product.setBuyerRequirement(buyerRequirement);
 
         return product;

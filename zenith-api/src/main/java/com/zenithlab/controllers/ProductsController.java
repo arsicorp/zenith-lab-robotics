@@ -39,10 +39,7 @@ public class ProductsController
         }
         catch(Exception ex)
         {
-            System.out.println("===== ERROR IN SEARCH =====");
-            ex.printStackTrace();
-            System.out.println("===========================");
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to search products");
         }
     }
 

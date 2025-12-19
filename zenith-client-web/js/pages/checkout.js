@@ -17,24 +17,35 @@ const checkout = {
   async loadCheckoutData() {
     try {
       // load cart and profile
-      this.cartData = await api.getCart();
+      const cartResponse = await api.getCart();
       this.profile = await api.getProfile();
-      
+
+      // handle items as Map (object) or array
+      let items = [];
+      if (cartResponse && cartResponse.items) {
+        if (Array.isArray(cartResponse.items)) {
+          items = cartResponse.items;
+        } else if (typeof cartResponse.items === 'object') {
+          items = Object.values(cartResponse.items);
+        }
+      }
+      this.cartData = { items };
+
       // check if cart is empty
-      if (!this.cartData.items || this.cartData.items.length === 0) {
+      if (items.length === 0) {
         window.location.href = 'cart.html';
         return;
       }
-      
+
       // check buyer restrictions
       this.checkBuyerRestrictions();
-      
+
       // display order review
       this.displayOrderReview();
-      
+
       // pre-fill shipping form
       this.prefillForm();
-      
+
     } catch (error) {
       utils.showError(error.message || 'Failed to load checkout data');
     }

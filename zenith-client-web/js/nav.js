@@ -15,16 +15,25 @@ const nav = {
   async updateCartBadge() {
     const badge = document.getElementById('cart-badge');
     if (!badge) return;
-    
+
     if (!auth.isLoggedIn()) {
       badge.style.display = 'none';
       return;
     }
-    
+
     try {
       const cart = await api.getCart();
-      const itemCount = cart.items?.length || 0;
-      
+
+      // handle items as Map (object) or array
+      let itemCount = 0;
+      if (cart.items) {
+        if (Array.isArray(cart.items)) {
+          itemCount = cart.items.length;
+        } else if (typeof cart.items === 'object') {
+          itemCount = Object.keys(cart.items).length;
+        }
+      }
+
       if (itemCount > 0) {
         badge.textContent = itemCount;
         badge.style.display = 'flex';

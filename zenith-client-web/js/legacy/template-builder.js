@@ -16,7 +16,7 @@ class TemplateBuilder
                 }
                 catch(e)
                 {
-                    console.log(e);
+                    // template render error
                 }
             })
     }
@@ -48,7 +48,7 @@ class TemplateBuilder
                  }
                  catch(e)
                  {
-                     console.log(e);
+                     // template render error
                  }
              })
     }

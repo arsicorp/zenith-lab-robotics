@@ -1,97 +1,104 @@
 /* components - buttons, cards, forms, badges, modals */
+/* 1X.tech inspired component design - clean, minimal, sophisticated */
 
-/* buttons */
+/* buttons - refined minimal style */
 .btn {
-  display: inline-block;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px 28px;
+  font-size: 13px;
+  font-weight: 500;
   text-align: center;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: 0.15s ease;
+  transition: var(--transition-smooth);
   text-decoration: none;
+  letter-spacing: 0.01em;
+  gap: 8px;
 }
 
 .btn:disabled {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
 .btn-primary {
-  background: var(--blue);
-  color: white;
+  background: #000;
+  color: #fff;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: var(--blue-light);
+  background: #1a1a1a;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(30, 136, 229, 0.3);
 }
 
 .btn-success {
-  background: var(--green);
-  color: white;
+  background: #000;
+  color: #fff;
 }
 
 .btn-success:hover:not(:disabled) {
-  background: var(--green-light);
+  background: #1a1a1a;
+  transform: translateY(-1px);
 }
 
 .btn-secondary {
-  background: var(--gray-200);
-  color: var(--gray-900);
+  background: transparent;
+  color: #000;
+  border: 1px solid rgba(0, 0, 0, 0.15);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background: var(--gray-300);
+  border-color: #000;
+  background: rgba(0, 0, 0, 0.03);
 }
 
 .btn-outline {
   background: transparent;
-  border: 2px solid var(--blue);
-  color: var(--blue);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: #000;
 }
 
 .btn-outline:hover:not(:disabled) {
-  background: var(--blue);
-  color: white;
+  border-color: #000;
+  background: rgba(0, 0, 0, 0.03);
 }
 
 .btn-small {
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
+  padding: 10px 20px;
+  font-size: 12px;
 }
 
 .btn-large {
-  padding: 1rem 2rem;
-  font-size: 1.125rem;
+  padding: 16px 40px;
+  font-size: 14px;
 }
 
 .btn-full {
   width: 100%;
 }
 
-/* product cards */
+/* product cards - minimal style with consistent image sizing */
 .product-card {
   background: white;
-  border: 1px solid var(--gray-200);
-  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
   overflow: hidden;
-  transition: 0.3s ease;
+  transition: all 0.2s ease;
   cursor: pointer;
 }
 
 .product-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 }
 
 .product-card-image {
   width: 100%;
-  height: 280px;
-  background: var(--gray-100);
+  aspect-ratio: 4/5;
+  background: #f8f8f8;
   position: relative;
   overflow: hidden;
 }
@@ -102,13 +109,33 @@
   object-fit: cover;
 }
 
+/* Image placeholder for missing images */
+.product-image-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.product-image-placeholder::after {
+  content: 'IMAGE';
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.2);
+  letter-spacing: 0.1em;
+}
+
 .product-badge {
   position: absolute;
   top: 1rem;
   right: 1rem;
   padding: 0.25rem 0.75rem;
   background: rgba(255, 255, 255, 0.95);
-  border-radius: 4px;
+  border-radius: 2px;
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -120,30 +147,29 @@
 }
 
 .product-card-content {
-  padding: 1.5rem;
+  padding: 24px;
 }
 
 .product-card-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.5rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  margin-bottom: 0.5rem;
-  color: var(--gray-900);
+  font-family: var(--font-primary);
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #000;
 }
 
 .product-card-desc {
   color: var(--gray-600);
-  font-size: 0.875rem;
+  font-size: 14px;
   margin-bottom: 1rem;
   line-height: 1.5;
 }
 
 .product-card-price {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--blue);
-  margin-bottom: 1rem;
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 16px;
 }
 
 .product-card-footer {
@@ -153,16 +179,18 @@
   gap: 1rem;
 }
 
-/* forms */
+/* forms - refined styling */
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 24px;
 }
 
 .form-label {
   display: block;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: var(--gray-900);
+  font-weight: 500;
+  font-size: 13px;
+  margin-bottom: 8px;
+  color: #000;
+  letter-spacing: 0.01em;
 }
 
 .form-label.required::after {
@@ -174,20 +202,27 @@
 .form-select,
 .form-textarea {
   width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
+  padding: 14px 16px;
+  font-size: 14px;
   font-family: inherit;
-  border: 1px solid var(--gray-300);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  transition: 0.15s ease;
+  transition: var(--transition-base);
+  background: white;
+  color: #000;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: var(--color-text-muted);
 }
 
 .form-input:focus,
 .form-select:focus,
 .form-textarea:focus {
-  border-color: var(--blue);
+  border-color: #000;
   outline: none;
-  box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.1);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
 }
 
 .form-input.error,
@@ -197,20 +232,21 @@
 }
 
 .form-textarea {
-  min-height: 120px;
+  min-height: 140px;
   resize: vertical;
+  line-height: 1.6;
 }
 
 .form-error {
   color: var(--error);
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
+  font-size: 12px;
+  margin-top: 6px;
 }
 
 .form-help {
-  color: var(--gray-600);
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  margin-top: 6px;
 }
 
 /* checkbox and radio */
@@ -494,39 +530,65 @@
   color: var(--gray-700);
 }
 
-/* quantity selector */
+/* quantity selector - refined aligned design */
 .quantity-selector {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  border: 1px solid var(--gray-300);
+  border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   overflow: hidden;
+  background: white;
 }
 
 .quantity-btn {
-  padding: 0.5rem 1rem;
-  background: white;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
   border: none;
   cursor: pointer;
-  font-size: 1.125rem;
-  color: var(--gray-700);
-  transition: 0.15s ease;
+  font-size: 16px;
+  font-weight: 500;
+  color: #000;
+  transition: var(--transition-base);
+  user-select: none;
 }
 
 .quantity-btn:hover {
-  background: var(--gray-100);
-  color: var(--blue);
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.quantity-btn:active {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.quantity-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 
 .quantity-input {
-  width: 60px;
+  width: 48px;
+  height: 36px;
   text-align: center;
   border: none;
-  border-left: 1px solid var(--gray-300);
-  border-right: 1px solid var(--gray-300);
-  padding: 0.5rem;
+  border-left: 1px solid rgba(0, 0, 0, 0.08);
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 0;
+  font-size: 14px;
   font-weight: 600;
+  font-family: inherit;
+  color: #000;
+  background: transparent;
+  -moz-appearance: textfield;
+}
+
+.quantity-input::-webkit-outer-spin-button,
+.quantity-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 /* responsive */

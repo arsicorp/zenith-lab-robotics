@@ -10,6 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -56,9 +57,12 @@ public class AuthenticationController {
 
             if (user == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
+            // Get profile for additional user data
+            Profile profile = profileDao.getByUserId(user.getId());
+
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-            return new ResponseEntity<>(new LoginResponseDto(jwt, user), httpHeaders, HttpStatus.OK);
+            return new ResponseEntity<>(new LoginResponseDto(jwt, user, profile), httpHeaders, HttpStatus.OK);
         }
         catch(Exception ex)
         {
@@ -68,7 +72,7 @@ public class AuthenticationController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ResponseEntity<User> register(@Valid @RequestBody RegisterUserDto newUser) {
+    public ResponseEntity<LoginResponseDto> register(@Valid @RequestBody RegisterUserDto newUser) {
 
         try
         {
@@ -81,17 +85,43 @@ public class AuthenticationController {
             // create user
             User user = userDao.create(new User(0, newUser.getUsername(), newUser.getPassword(), newUser.getRole()));
 
-            // create profile
+            // create profile with registration data
             Profile profile = new Profile();
             profile.setUserId(user.getId());
+            profile.setFirstName(newUser.getFirstName());
+            profile.setLastName(newUser.getLastName());
+            profile.setEmail(newUser.getEmail());
+            profile.setPhone(newUser.getPhone());
+            profile.setAccountType("PERSONAL");
             profileDao.create(profile);
 
-            return new ResponseEntity<>(user, HttpStatus.CREATED);
+            // Auto-login: generate token for the new user
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(newUser.getUsername(), newUser.getPassword());
+            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = tokenProvider.createToken(authentication, false);
+
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+            return new ResponseEntity<>(new LoginResponseDto(jwt, user, profile), httpHeaders, HttpStatus.CREATED);
+        }
+        catch (ResponseStatusException e)
+        {
+            throw e;
         }
         catch (Exception e)
         {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
+    }
+
+    // Temporary endpoint to generate password hash - REMOVE AFTER FIXING
+    @GetMapping("/generate-hash")
+    public String generateHash(@RequestParam(defaultValue = "password") String password) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String hash = encoder.encode(password);
+        return "Password: " + password + "\nHash: " + hash + "\nUse this SQL:\nUPDATE users SET hashed_password = '" + hash + "' WHERE user_id > 0;";
     }
 
 }

@@ -13,6 +13,7 @@ public class Product
     private int stock;
     private boolean isFeatured;
     private String imageUrl;
+    private String detailImageUrl;
     private String buyerRequirement;
 
     public Product()
@@ -120,6 +121,16 @@ public class Product
     public void setImageUrl(String imageUrl)
     {
         this.imageUrl = imageUrl;
+    }
+
+    public String getDetailImageUrl()
+    {
+        return detailImageUrl;
+    }
+
+    public void setDetailImageUrl(String detailImageUrl)
+    {
+        this.detailImageUrl = detailImageUrl;
     }
 
     public String getBuyerRequirement()

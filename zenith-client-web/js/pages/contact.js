@@ -23,7 +23,7 @@ const contact = {
         robots.map(p => `<option value="${p.productId}">${p.name}</option>`).join('');
       
     } catch (error) {
-      console.error('Failed to load products:', error);
+      // silently fail - product select is optional
     }
   },
   

@@ -53,7 +53,8 @@ CREATE TABLE products (
     stock INT NOT NULL DEFAULT 0,
     featured BOOLEAN DEFAULT FALSE,
     image_url VARCHAR(200),
-    
+    detail_image_url VARCHAR(200),
+
     -- robot specifications
     ai_model VARCHAR(100),
     height_cm INT,
@@ -170,12 +171,13 @@ CREATE TABLE sales_inquiries (
 
 -- demo users with different account types
 -- all passwords are: password
+-- BCrypt hash for "password" with cost 10 (verified working hash)
 INSERT INTO users (username, hashed_password, role) VALUES
-('admin', '$2a$10$lfQi9jSfhZZhfS7d1JP2/.nLYBqKGLqBVk3qTvuBDKyv9bLVLvPEy', 'ADMIN'),
-('user', '$2a$10$lfQi9jSfhZZhfS7d1JP2/.nLYBqKGLqBVk3qTvuBDKyv9bLVLvPEy', 'USER'),
-('businessuser', '$2a$10$lfQi9jSfhZZhfS7d1JP2/.nLYBqKGLqBVk3qTvuBDKyv9bLVLvPEy', 'USER'),
-('medicaluser', '$2a$10$lfQi9jSfhZZhfS7d1JP2/.nLYBqKGLqBVk3qTvuBDKyv9bLVLvPEy', 'USER'),
-('govuser', '$2a$10$lfQi9jSfhZZhfS7d1JP2/.nLYBqKGLqBVk3qTvuBDKyv9bLVLvPEy', 'USER');
+('admin', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'ADMIN'),
+('user', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'USER'),
+('businessuser', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'USER'),
+('medicaluser', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'USER'),
+('govuser', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'USER');
 
 INSERT INTO profiles (user_id, first_name, last_name, phone, email, address, city, state, zip, account_type, company_name, verified) VALUES
 (1, 'Admin', 'User', '555-0001', 'admin@zenithlab.com', '123 Tech Street', 'San Francisco', 'CA', '94105', 'PERSONAL', NULL, TRUE),
@@ -195,41 +197,41 @@ INSERT INTO categories (name, description) VALUES
 ('Accessories & Components', 'Batteries, charging stations, upgrade modules, and maintenance equipment');
 
 -- flagship robots
-INSERT INTO products (name, price, category_id, description, color, stock, featured, image_url, ai_model, height_cm, weight_kg, payload_kg, battery_hours, speed_kmh, autonomy_level, buyer_requirement, warranty_years, use_cases) VALUES
+INSERT INTO products (name, price, category_id, description, color, stock, featured, image_url, detail_image_url, ai_model, height_cm, weight_kg, payload_kg, battery_hours, speed_kmh, autonomy_level, buyer_requirement, warranty_years, use_cases) VALUES
 
 ('KODA Household Robot', 34999.00, 1,
 'The ultimate home assistant. KODA seamlessly handles cleaning, cooking, laundry, elderly care, and garden maintenance. Powered by advanced AI, KODA learns your preferences and adapts to your household needs. With its gentle touch and intelligent navigation, KODA becomes an indispensable member of your family.',
-'Ceramic Sand', 25, TRUE, 'koda-household.jpg',
+'Ceramic Sand', 25, TRUE, 'images/robots/koda-grid.jpg', 'images/robots/koda-detail.jpg',
 'Zenith Neural OS v3.2', 165, 58.5, 15.0, 16.0, 4.5, 'Fully Autonomous',
 'NONE', 3, 'cleaning,cooking,laundry,elderly care,garden maintenance,home security'),
 
 ('SERVO Industrial Robot', 189999.00, 2,
 'Complete industrial automation solution. SERVO excels at assembly line work, warehouse logistics, quality control, and heavy material handling. Built for 24/7 operation in demanding environments, SERVO increases productivity while maintaining precision. Industry 4.0 ready with full IoT integration.',
-'Raw Titanium', 15, TRUE, 'servo-industrial.jpg',
+'Raw Titanium', 15, TRUE, 'images/robots/servo-grid.jpg', 'images/robots/servo-detail.jpg',
 'Zenith Industrial AI v2.8', 180, 125.0, 250.0, 12.0, 6.0, 'Semi-Autonomous',
 'BUSINESS', 5, 'assembly,logistics,quality control,material handling,warehouse automation,manufacturing'),
 
 ('NOVA Medical Robot', 349999.00, 3,
 'Advanced healthcare automation. NOVA assists with surgical procedures, patient mobility, laboratory automation, and clinical care. FDA compliant with medical grade precision sensors. NOVA reduces staff workload while improving patient outcomes. Seamlessly integrates with hospital systems.',
-'Stellar White', 8, TRUE, 'nova-medical.jpg',
+'Stellar White', 8, TRUE, 'images/robots/nova-grid.jpg', 'images/robots/nova-detail.jpg',
 'Zenith MedAI v4.1 (FDA Certified)', 170, 72.0, 35.0, 10.0, 3.5, 'Semi-Autonomous',
 'MEDICAL', 5, 'surgical assistance,patient care,mobility assistance,laboratory automation,sterilization,medical transport'),
 
 ('MAGMA Construction Robot', 289999.00, 4,
 'Total construction powerhouse. MAGMA handles heavy material handling, precision installation, demolition work, and site preparation. Weatherproof and rugged, built for extreme conditions. With 500kg payload capacity, MAGMA replaces multiple workers while ensuring safety and efficiency.',
-'Molten Orange', 10, TRUE, 'magma-construction.jpg',
+'Molten Orange', 10, TRUE, 'images/robots/magma-grid.jpg', 'images/robots/magma-detail.jpg',
 'Zenith Construction AI v2.5', 210, 185.0, 500.0, 8.0, 5.5, 'Semi-Autonomous',
 'BUSINESS', 3, 'material handling,demolition,installation,site preparation,heavy lifting,excavation support'),
 
 ('EPSI-9 Tactical Unit', 799999.00, 5,
 'Elite tactical operations robot. EPSI-9 provides surveillance, reconnaissance, perimeter security, and tactical support. Military grade durability with encrypted communication systems. ITAR compliant. Requires government authorization for purchase. Trusted by defense forces worldwide.',
-'Phantom Black', 5, FALSE, 'epsi9-tactical.jpg',
+'Phantom Black', 5, FALSE, 'images/robots/epsi-9-grid.jpg', 'images/robots/epsi-9-detail.jpg',
 'Zenith Tactical AI v5.0 (Classified)', 185, 145.0, 150.0, 18.0, 15.0, 'Semi-Autonomous',
 'GOVERNMENT', 5, 'surveillance,reconnaissance,perimeter security,tactical support,bomb disposal,search and rescue'),
 
 ('SAGE Research Platform', 99999.00, 6,
 'Versatile research and development platform. SAGE is designed for laboratory work, field research, agricultural automation, and scientific studies. Modular design allows extensive customization. Open API for academic and commercial research. Perfect for universities and R&D departments.',
-'Boreal Green', 20, TRUE, 'sage-research.jpg',
+'Boreal Green', 20, TRUE, 'images/robots/sage-grid.jpg', 'images/robots/sage-detail.jpg',
 'Zenith Research AI v3.0 (Open API)', 175, 68.0, 40.0, 14.0, 6.0, 'Fully Autonomous',
 'BUSINESS', 2, 'laboratory research,field studies,agricultural automation,data collection,environmental monitoring,education');
 
@@ -238,67 +240,67 @@ INSERT INTO products (name, price, category_id, description, color, stock, featu
 
 ('Universal Charging Station Pro', 4999.00, 7,
 'Fast charging station compatible with most Zenith robots. Dual charging ports, smart power management, and automatic scheduling. Charge two robots simultaneously in 4 hours.',
-'Charcoal Gray', 50, FALSE, 'charging-station-pro.jpg', 'NONE', 2, 'KODA,SERVO,NOVA,SAGE'),
+'Charcoal Gray', 50, FALSE, 'images/accessories/charging-station-pro.jpg', 'NONE', 2, 'KODA,SERVO,NOVA,SAGE'),
 
 ('Zenith Maintenance Kit Pro', 1499.00, 7,
 'Complete maintenance package including cleaning solutions, diagnostic tools, calibration equipment, and replacement filters. Extends robot lifespan and maintains optimal performance.',
-'Tool Red', 100, FALSE, 'maintenance-kit.jpg', 'NONE', 1, 'KODA,SERVO,NOVA,MAGMA,EPSI-9,SAGE'),
+'Tool Red', 100, FALSE, 'images/accessories/maintenance-kit.jpg', 'NONE', 1, 'KODA,SERVO,NOVA,MAGMA,EPSI-9,SAGE'),
 
 ('AI Vision Upgrade Module v3', 7999.00, 7,
 'Enhanced computer vision system with 4K cameras, LiDAR, and thermal imaging. Dramatically improves object recognition and navigation in complex environments.',
-'Tech Blue', 30, FALSE, 'vision-upgrade.jpg', 'NONE', 2, 'KODA,SERVO,NOVA,SAGE'),
+'Tech Blue', 30, FALSE, 'images/accessories/vision-upgrade.jpg', 'NONE', 2, 'KODA,SERVO,NOVA,SAGE'),
 
 ('Extended Battery Pack - Standard', 2999.00, 7,
 'Doubles runtime for household and research robots. Hot swappable design allows continuous operation. Includes smart battery management system.',
-'Matte Black', 75, FALSE, 'battery-standard.jpg', 'NONE', 2, 'KODA,SAGE'),
+'Matte Black', 75, FALSE, 'images/accessories/battery-standard.jpg', 'NONE', 2, 'KODA,SAGE'),
 
 ('Extended Battery Pack - Industrial', 5999.00, 7,
 'High capacity battery for industrial and construction robots. 50% more runtime. Built for harsh environments with reinforced casing.',
-'Steel Gray', 40, FALSE, 'battery-industrial.jpg', 'BUSINESS', 2, 'SERVO,MAGMA'),
+'Steel Gray', 40, FALSE, 'images/accessories/battery-industrial.jpg', 'BUSINESS', 2, 'SERVO,MAGMA'),
 
 ('KODA Home Assistant Package', 3499.00, 7,
 'Complete home upgrade including advanced cooking attachments, garden tools, pet care accessories, and premium cleaning equipment. Makes KODA even more capable.',
-'Pearl White', 35, FALSE, 'koda-package.jpg', 'NONE', 1, 'KODA'),
+'Pearl White', 35, FALSE, 'images/accessories/koda-package.jpg', 'NONE', 1, 'KODA'),
 
 ('SERVO Industrial Gripper Set', 8999.00, 7,
 'Professional grade gripper attachments for various industrial tasks. Includes precision grippers, heavy duty clamps, and specialized tools for manufacturing.',
-'Industrial Gray', 25, FALSE, 'servo-grippers.jpg', 'BUSINESS', 2, 'SERVO'),
+'Industrial Gray', 25, FALSE, 'images/accessories/servo-grippers.jpg', 'BUSINESS', 2, 'SERVO'),
 
 ('NOVA Medical Instruments Package', 12999.00, 7,
 'FDA approved surgical instruments and diagnostic tools compatible with NOVA. Includes sterilization equipment and medical grade sensors.',
-'Clinical White', 15, FALSE, 'nova-instruments.jpg', 'MEDICAL', 3, 'NOVA'),
+'Clinical White', 15, FALSE, 'images/accessories/nova-instruments.jpg', 'MEDICAL', 3, 'NOVA'),
 
 ('MAGMA Heavy Duty Tool Kit', 9999.00, 7,
 'Construction grade attachments including jackhammer arm, welding tools, and demolition equipment. Built for extreme worksite conditions.',
-'Safety Orange', 20, FALSE, 'magma-tools.jpg', 'BUSINESS', 2, 'MAGMA'),
+'Safety Orange', 20, FALSE, 'images/accessories/magma-tools.jpg', 'BUSINESS', 2, 'MAGMA'),
 
 ('EPSI-9 Tactical Equipment Module', 15999.00, 7,
 'Military grade equipment package including encrypted communications, night vision, surveillance sensors, and tactical accessories. ITAR restricted.',
-'Phantom Black', 8, FALSE, 'epsi9-tactical-kit.jpg', 'GOVERNMENT', 3, 'EPSI-9'),
+'Phantom Black', 8, FALSE, 'images/accessories/epsi9-tactical-kit.jpg', 'GOVERNMENT', 3, 'EPSI-9'),
 
 ('Neural Processing Upgrade Core', 11999.00, 7,
 '10x AI processing power upgrade. Enables advanced machine learning, faster decision making, and improved autonomous operations. Easy installation.',
-'Neural Blue', 25, FALSE, 'processing-upgrade.jpg', 'NONE', 2, 'KODA,SERVO,NOVA,SAGE'),
+'Neural Blue', 25, FALSE, 'images/accessories/processing-upgrade.jpg', 'NONE', 2, 'KODA,SERVO,NOVA,SAGE'),
 
 ('Advanced Mobility Package', 6999.00, 7,
 'Improved locomotion system with enhanced balance, terrain adaptation, and climbing capabilities. Enables operation in challenging environments.',
-'Titanium', 30, FALSE, 'mobility-package.jpg', 'NONE', 2, 'KODA,SERVO,MAGMA,SAGE'),
+'Titanium', 30, FALSE, 'images/accessories/mobility-package.jpg', 'NONE', 2, 'KODA,SERVO,MAGMA,SAGE'),
 
 ('Heavy Duty Charging Bay', 8999.00, 7,
 'Industrial charging station for construction and military robots. Weatherproof, reinforced construction, fast charging capability. Charges MAGMA in 6 hours, EPSI-9 in 8 hours.',
-'Industrial Yellow', 15, FALSE, 'charging-bay-heavy.jpg', 'BUSINESS', 3, 'MAGMA,EPSI-9'),
+'Industrial Yellow', 15, FALSE, 'images/accessories/charging-bay-heavy.jpg', 'BUSINESS', 3, 'MAGMA,EPSI-9'),
 
 ('Zenith Cloud AI Subscription - Annual', 5999.00, 7,
 'Annual subscription to Zenith Cloud AI services. Enables remote monitoring, OTA updates, advanced analytics, and 24/7 cloud based AI assistance.',
-'Digital Blue', 999, FALSE, 'cloud-subscription.jpg', 'NONE', 1, 'KODA,SERVO,NOVA,MAGMA,EPSI-9,SAGE'),
+'Digital Blue', 999, FALSE, 'images/accessories/cloud-subscription.jpg', 'NONE', 1, 'KODA,SERVO,NOVA,MAGMA,EPSI-9,SAGE'),
 
 ('Robotic Docking Station Smart', 3499.00, 7,
 'Automated docking and charging station with smart positioning. Robots automatically return for charging. Includes storage for accessories and tools.',
-'Modern White', 40, FALSE, 'docking-station.jpg', 'NONE', 2, 'KODA,SERVO,SAGE'),
+'Modern White', 40, FALSE, 'images/accessories/docking-station.jpg', 'NONE', 2, 'KODA,SERVO,SAGE'),
 
 ('Environmental Weatherproofing Kit', 2499.00, 7,
 'Complete weatherproofing upgrade for outdoor operations. Waterproof seals, dust protection, temperature resistance upgrades. Essential for field work.',
-'Weather Gray', 45, FALSE, 'weatherproof-kit.jpg', 'NONE', 1, 'MAGMA,EPSI-9,SAGE');
+'Weather Gray', 45, FALSE, 'images/accessories/weatherproof-kit.jpg', 'NONE', 1, 'MAGMA,EPSI-9,SAGE');
 
 -- career opportunities
 INSERT INTO jobs (title, department, location, job_type, description, requirements, salary_range, posted_date, status) VALUES

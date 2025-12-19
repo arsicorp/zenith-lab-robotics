@@ -137,14 +137,27 @@ const api = {
       headers: auth.getAuthHeaders(),
       body: JSON.stringify({ quantity })
     });
-    
+
     if (!response.ok) {
       throw new Error('Failed to update cart');
     }
-    
+
     return await response.json();
   },
-  
+
+  async removeCartItem(productId) {
+    const response = await fetch(`${this.baseUrl}/cart/products/${productId}`, {
+      method: 'DELETE',
+      headers: auth.getAuthHeaders()
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to remove item from cart');
+    }
+
+    return await response.json();
+  },
+
   async clearCart() {
     const response = await fetch(`${this.baseUrl}/cart`, {
       method: 'DELETE',
