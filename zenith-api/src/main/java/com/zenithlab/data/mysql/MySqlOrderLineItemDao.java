@@ -46,7 +46,11 @@ public class MySqlOrderLineItemDao extends MySqlDaoBase implements OrderLineItem
     {
         List<OrderLineItem> items = new ArrayList<>();
 
-        String sql = "SELECT * FROM order_line_items WHERE order_id = ?";
+        String sql = "SELECT oli.order_id, oli.product_id, oli.sales_price, oli.quantity, oli.discount, " +
+                     "p.name as product_name, p.color as product_color, p.image_url as product_image_url " +
+                     "FROM order_line_items oli " +
+                     "JOIN products p ON oli.product_id = p.product_id " +
+                     "WHERE oli.order_id = ?";
 
         try (Connection connection = getConnection())
         {
@@ -71,13 +75,25 @@ public class MySqlOrderLineItemDao extends MySqlDaoBase implements OrderLineItem
 
     private OrderLineItem mapRow(ResultSet row) throws SQLException
     {
-        int orderLineItemId = row.getInt("order_line_item_id");
         int orderId = row.getInt("order_id");
         int productId = row.getInt("product_id");
         BigDecimal salesPrice = row.getBigDecimal("sales_price");
         int quantity = row.getInt("quantity");
         BigDecimal discount = row.getBigDecimal("discount");
+        String productName = row.getString("product_name");
+        String productColor = row.getString("product_color");
+        String productImageUrl = row.getString("product_image_url");
 
-        return new OrderLineItem(orderLineItemId, orderId, productId, salesPrice, quantity, discount);
+        OrderLineItem item = new OrderLineItem();
+        item.setOrderId(orderId);
+        item.setProductId(productId);
+        item.setSalesPrice(salesPrice);
+        item.setQuantity(quantity);
+        item.setDiscount(discount);
+        item.setProductName(productName);
+        item.setProductColor(productColor);
+        item.setProductImageUrl(productImageUrl);
+
+        return item;
     }
 }

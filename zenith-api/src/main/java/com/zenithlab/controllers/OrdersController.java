@@ -185,4 +185,46 @@ public class OrdersController
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }
+
+    @GetMapping("{id}")
+    public Order getOrderById(@PathVariable int id, Principal principal)
+    {
+        try
+        {
+            // get the currently logged in username
+            String userName = principal.getName();
+            // find database user by username
+            User user = userDao.getByUserName(userName);
+            int userId = user.getId();
+
+            // get the order by id
+            Order order = orderDao.getById(id);
+
+            if (order == null)
+            {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "order not found");
+            }
+
+            // check if this order belongs to current user
+            if (order.getUserId() != userId)
+            {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "access denied");
+            }
+
+            // get line items for this order
+            List<OrderLineItem> lineItems = orderLineItemDao.getByOrderId(id);
+            order.setLineItems(lineItems);
+
+            return order;
+        }
+        catch(ResponseStatusException ex)
+        {
+            throw ex;
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "error: " + ex.getMessage());
+        }
+    }
 }

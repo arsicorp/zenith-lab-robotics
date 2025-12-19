@@ -2,6 +2,7 @@ package com.zenithlab.models;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 public class Order
 {
@@ -14,6 +15,7 @@ public class Order
     private String zip;
     private BigDecimal shippingAmount;
     private BigDecimal orderTotal;
+    private List<OrderLineItem> lineItems;
 
     public Order()
     {
@@ -30,6 +32,20 @@ public class Order
         this.zip = zip;
         this.shippingAmount = shippingAmount;
         this.orderTotal = orderTotal;
+    }
+
+    public Order(int orderId, int userId, LocalDate date, String address, String city, String state, String zip, BigDecimal shippingAmount, BigDecimal orderTotal, List<OrderLineItem> lineItems)
+    {
+        this.orderId = orderId;
+        this.userId = userId;
+        this.date = date;
+        this.address = address;
+        this.city = city;
+        this.state = state;
+        this.zip = zip;
+        this.shippingAmount = shippingAmount;
+        this.orderTotal = orderTotal;
+        this.lineItems = lineItems;
     }
 
     public int getOrderId()
@@ -120,5 +136,15 @@ public class Order
     public void setOrderTotal(BigDecimal orderTotal)
     {
         this.orderTotal = orderTotal;
+    }
+
+    public List<OrderLineItem> getLineItems()
+    {
+        return lineItems;
+    }
+
+    public void setLineItems(List<OrderLineItem> lineItems)
+    {
+        this.lineItems = lineItems;
     }
 }

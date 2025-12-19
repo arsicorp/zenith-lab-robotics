@@ -10,6 +10,9 @@ public class OrderLineItem
     private BigDecimal salesPrice;
     private int quantity;
     private BigDecimal discount;
+    private String productName;
+    private String productColor;
+    private String productImageUrl;
 
     public OrderLineItem()
     {
@@ -23,6 +26,19 @@ public class OrderLineItem
         this.salesPrice = salesPrice;
         this.quantity = quantity;
         this.discount = discount;
+    }
+
+    public OrderLineItem(int orderLineItemId, int orderId, int productId, BigDecimal salesPrice, int quantity, BigDecimal discount, String productName, String productColor, String productImageUrl)
+    {
+        this.orderLineItemId = orderLineItemId;
+        this.orderId = orderId;
+        this.productId = productId;
+        this.salesPrice = salesPrice;
+        this.quantity = quantity;
+        this.discount = discount;
+        this.productName = productName;
+        this.productColor = productColor;
+        this.productImageUrl = productImageUrl;
     }
 
     public int getOrderLineItemId()
@@ -83,5 +99,35 @@ public class OrderLineItem
     public void setDiscount(BigDecimal discount)
     {
         this.discount = discount;
+    }
+
+    public String getProductName()
+    {
+        return productName;
+    }
+
+    public void setProductName(String productName)
+    {
+        this.productName = productName;
+    }
+
+    public String getProductColor()
+    {
+        return productColor;
+    }
+
+    public void setProductColor(String productColor)
+    {
+        this.productColor = productColor;
+    }
+
+    public String getProductImageUrl()
+    {
+        return productImageUrl;
+    }
+
+    public void setProductImageUrl(String productImageUrl)
+    {
+        this.productImageUrl = productImageUrl;
     }
 }

@@ -7,6 +7,8 @@ import com.zenithlab.models.JobApplication;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class MySqlJobApplicationDao extends MySqlDaoBase implements JobApplicationDao
@@ -57,5 +59,58 @@ public class MySqlJobApplicationDao extends MySqlDaoBase implements JobApplicati
         }
 
         return null;
+    }
+
+    @Override
+    public List<JobApplication> getAllJobApplications()
+    {
+        List<JobApplication> applications = new ArrayList<>();
+
+        String sql = "SELECT * FROM job_applications ORDER BY applied_date DESC";
+
+        try (Connection connection = getConnection())
+        {
+            PreparedStatement statement = connection.prepareStatement(sql);
+
+            ResultSet row = statement.executeQuery();
+
+            while (row.next())
+            {
+                JobApplication application = mapRow(row);
+                applications.add(application);
+            }
+        }
+        catch (SQLException e)
+        {
+            throw new RuntimeException(e);
+        }
+
+        return applications;
+    }
+
+    private JobApplication mapRow(ResultSet row) throws SQLException
+    {
+        int applicationId = row.getInt("application_id");
+        int jobId = row.getInt("job_id");
+        String applicantName = row.getString("applicant_name");
+        String email = row.getString("email");
+        String phone = row.getString("phone");
+        String resumeUrl = row.getString("resume_url");
+        String coverLetter = row.getString("cover_letter");
+        LocalDateTime appliedDate = row.getTimestamp("applied_date").toLocalDateTime();
+        String status = row.getString("status");
+
+        JobApplication application = new JobApplication();
+        application.setApplicationId(applicationId);
+        application.setJobId(jobId);
+        application.setApplicantName(applicantName);
+        application.setEmail(email);
+        application.setPhone(phone);
+        application.setResumeUrl(resumeUrl);
+        application.setCoverLetter(coverLetter);
+        application.setAppliedDate(appliedDate);
+        application.setStatus(status);
+
+        return application;
     }
 }
