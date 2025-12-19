@@ -1,65 +1,141 @@
-// navigation bar logic
-// handles sticky nav, cart count, login state
+// navigation component - cart badge, account dropdown, mobile menu
 
-// update cart badge count
-function updateCartBadge() {
-    if (!config.isLoggedIn()) {
-        document.querySelector('.cart-badge').textContent = '0';
-        return;
+const nav = {
+  // initialize navigation
+  init() {
+    this.updateCartBadge();
+    this.updateAccountDisplay();
+    this.setupScrollEffect();
+    this.setupMobileMenu();
+    this.setupAccountDropdown();
+    this.highlightCurrentPage();
+  },
+  
+  // update cart badge with item count
+  async updateCartBadge() {
+    const badge = document.getElementById('cart-badge');
+    if (!badge) return;
+    
+    if (!auth.isLoggedIn()) {
+      badge.style.display = 'none';
+      return;
     }
-
-    // get cart from api
-    axios.get(`${config.baseUrl}/cart`, {
-        headers: config.getHeaders()
-    })
-    .then(response => {
-        const items = response.data.items || [];
-        const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-        document.querySelector('.cart-badge').textContent = totalItems;
-    })
-    .catch(err => {
-        console.log('failed to load cart count:', err);
-        document.querySelector('.cart-badge').textContent = '0';
+    
+    try {
+      const cart = await api.getCart();
+      const itemCount = cart.items?.length || 0;
+      
+      if (itemCount > 0) {
+        badge.textContent = itemCount;
+        badge.style.display = 'flex';
+      } else {
+        badge.style.display = 'none';
+      }
+    } catch (error) {
+      badge.style.display = 'none';
+    }
+  },
+  
+  // animate cart badge when item added
+  bounceCartBadge() {
+    const badge = document.getElementById('cart-badge');
+    if (badge) {
+      badge.classList.add('bounce');
+      setTimeout(() => badge.classList.remove('bounce'), 400);
+    }
+  },
+  
+  // update account display (login button or user name)
+  updateAccountDisplay() {
+    const accountTrigger = document.getElementById('account-trigger');
+    if (!accountTrigger) return;
+    
+    if (auth.isLoggedIn()) {
+      const userName = auth.getUserName();
+      accountTrigger.innerHTML = `
+        <span>${userName}</span>
+        <span>▼</span>
+      `;
+    } else {
+      accountTrigger.innerHTML = 'Login';
+      accountTrigger.onclick = () => {
+        window.location.href = 'auth.html';
+      };
+    }
+  },
+  
+  // setup account dropdown menu
+  setupAccountDropdown() {
+    const trigger = document.getElementById('account-trigger');
+    const dropdown = document.getElementById('account-dropdown');
+    
+    if (!trigger || !dropdown) return;
+    
+    if (!auth.isLoggedIn()) return;
+    
+    trigger.onclick = (e) => {
+      e.stopPropagation();
+      dropdown.classList.toggle('show');
+    };
+    
+    // close dropdown when clicking outside
+    document.addEventListener('click', () => {
+      dropdown.classList.remove('show');
     });
-}
-
-// update account button based on login state
-function updateAccountButton() {
-    const accountBtn = document.querySelector('.account-btn');
-
-    if (config.isLoggedIn()) {
-        const user = config.getCurrentUser();
-        accountBtn.innerHTML = `
-            <span>${user.sub || 'Account'}</span>
-            <div class="dropdown">
-                <a href="profile.html">Profile</a>
-                <a href="profile.html#orders">Orders</a>
-                <a href="#" onclick="logout()">Logout</a>
-            </div>
-        `;
-    } else {
-        accountBtn.innerHTML = '<a href="login.html">Login</a>';
+    
+    // logout button
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+      logoutBtn.onclick = (e) => {
+        e.preventDefault();
+        auth.logout();
+      };
     }
-}
+  },
+  
+  // add scroll effect to navigation
+  setupScrollEffect() {
+    const navbar = document.querySelector('nav');
+    if (!navbar) return;
+    
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+  },
+  
+  // setup mobile menu toggle
+  setupMobileMenu() {
+    const toggle = document.getElementById('nav-toggle');
+    const links = document.getElementById('nav-links');
+    
+    if (!toggle || !links) return;
+    
+    toggle.onclick = () => {
+      links.classList.toggle('mobile-open');
+    };
+  },
+  
+  // highlight current page in navigation
+  highlightCurrentPage() {
+    const currentPath = window.location.pathname;
+    const links = document.querySelectorAll('.nav-links a');
+    
+    links.forEach(link => {
+      const href = link.getAttribute('href');
+      if (currentPath.includes(href) && href !== '/') {
+        link.classList.add('active');
+      } else if (currentPath === '/' && href === '/index.html') {
+        link.classList.add('active');
+      }
+    });
+  }
+};
 
-// logout function
-function logout() {
-    localStorage.removeItem('token');
-    window.location.href = 'index.html';
-}
-
-// make nav sticky on scroll
-window.addEventListener('scroll', () => {
-    const nav = document.querySelector('nav');
-    if (window.scrollY > 50) {
-        nav.classList.add('scrolled');
-    } else {
-        nav.classList.remove('scrolled');
-    }
-});
-
-// run on page load
+// initialize nav when page loads
 document.addEventListener('DOMContentLoaded', () => {
-    updateCartBadge();
-    updateAccountButton();
+  nav.init();
 });

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Product Details - Zenith Lab</title>
-  
+  <title>Order Confirmation - Zenith Lab</title>
+
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/components.css">
@@ -37,20 +37,37 @@
       </div>
     </div>
   </nav>
-  
-  <div class="product-detail">
-    <div class="container">
-      <div id="product-container">
-        <!-- loaded by product-detail.js -->
+
+  <div class="cart-page">
+    <div class="container-narrow">
+      <!-- Success Message -->
+      <div class="success-section" style="text-align: center; padding: 3rem 0;">
+        <div style="font-size: 4rem; color: #00C853; margin-bottom: 1rem;">✓</div>
+        <h1 style="color: #00C853; margin-bottom: 0.5rem;">Order Placed Successfully!</h1>
+        <p style="font-size: 1.125rem; color: var(--gray-600); margin-bottom: 2rem;">Thank you for your purchase</p>
+
+        <div id="order-info" style="margin-bottom: 2rem;">
+          <!-- Loaded by order-success.js -->
+        </div>
+
+        <p style="color: var(--gray-600);">Your order is being processed and will be shipped soon. You will receive a confirmation email with tracking details.</p>
       </div>
-      
-      <div class="accessories-section" id="accessories-section">
-        <h2>Compatible Accessories</h2>
-        <div class="accessories-grid" id="accessories-grid"></div>
+
+      <!-- Order Summary -->
+      <div id="error-container" style="display: none;"></div>
+
+      <div id="order-summary" style="margin-top: 2rem;">
+        <!-- Loaded by order-success.js -->
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;">
+        <a href="profile.html#orders" class="btn btn-primary btn-large" style="flex: 1; min-width: 200px;">View Order History</a>
+        <a href="products.html" class="btn btn-secondary btn-large" style="flex: 1; min-width: 200px;">Continue Shopping</a>
       </div>
     </div>
   </div>
-  
+
   <footer>
     <div class="footer-container">
       <div class="footer-bottom">
@@ -58,12 +75,12 @@
       </div>
     </div>
   </footer>
-  
+
   <script src="js/config.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/api.js"></script>
   <script src="js/nav.js"></script>
-  <script src="js/pages/product-detail.js"></script>
+  <script src="js/pages/order-success.js"></script>
 </body>
 </html>

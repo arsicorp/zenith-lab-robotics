@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Product Details - Zenith Lab</title>
+  <title>Shopping Cart - Zenith Lab</title>
   
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
@@ -38,15 +38,18 @@
     </div>
   </nav>
   
-  <div class="product-detail">
+  <div class="cart-page">
     <div class="container">
-      <div id="product-container">
-        <!-- loaded by product-detail.js -->
-      </div>
+      <h1>Shopping Cart</h1>
       
-      <div class="accessories-section" id="accessories-section">
-        <h2>Compatible Accessories</h2>
-        <div class="accessories-grid" id="accessories-grid"></div>
+      <div class="cart-layout">
+        <div id="cart-items">
+          <!-- loaded by cart.js -->
+        </div>
+        
+        <div id="cart-summary">
+          <!-- loaded by cart.js -->
+        </div>
       </div>
     </div>
   </div>
@@ -64,6 +67,6 @@
   <script src="js/auth.js"></script>
   <script src="js/api.js"></script>
   <script src="js/nav.js"></script>
-  <script src="js/pages/product-detail.js"></script>
+  <script src="js/pages/cart.js"></script>
 </body>
 </html>

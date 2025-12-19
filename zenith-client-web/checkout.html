@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Product Details - Zenith Lab</title>
+  <title>Checkout - Zenith Lab</title>
   
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
@@ -38,15 +38,47 @@
     </div>
   </nav>
   
-  <div class="product-detail">
+  <div class="checkout-page">
     <div class="container">
-      <div id="product-container">
-        <!-- loaded by product-detail.js -->
-      </div>
+      <h1>Checkout</h1>
       
-      <div class="accessories-section" id="accessories-section">
-        <h2>Compatible Accessories</h2>
-        <div class="accessories-grid" id="accessories-grid"></div>
+      <div id="error-container" style="display: none;"></div>
+      
+      <div class="checkout-layout">
+        <div>
+          <div class="checkout-section">
+            <h2>Shipping Information</h2>
+            <form id="checkout-form">
+              <div class="form-group">
+                <label class="form-label required">Address</label>
+                <input type="text" name="address" class="form-input" required>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label required">City</label>
+                <input type="text" name="city" class="form-input" required>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label required">State</label>
+                <input type="text" name="state" class="form-input" required>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label required">ZIP Code</label>
+                <input type="text" name="zip" class="form-input" required>
+              </div>
+              
+              <button type="submit" class="btn btn-primary btn-large btn-full" id="place-order-btn">
+                Place Order
+              </button>
+            </form>
+          </div>
+        </div>
+        
+        <div id="order-review">
+          <!-- loaded by checkout.js -->
+        </div>
       </div>
     </div>
   </div>
@@ -64,6 +96,6 @@
   <script src="js/auth.js"></script>
   <script src="js/api.js"></script>
   <script src="js/nav.js"></script>
-  <script src="js/pages/product-detail.js"></script>
+  <script src="js/pages/checkout.js"></script>
 </body>
 </html>
